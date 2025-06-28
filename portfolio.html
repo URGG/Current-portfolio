@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>George Urgiles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --border-color: #333333;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --accent: #3b82f6;
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #f1f5f9;
+            --border-color: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent: #3b82f6;
+        }
+        
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .bg-theme {
+            background: var(--bg-primary);
+        }
+        
+        .bg-card {
+            background: var(--bg-card);
+        }
+        
+        .border-theme {
+            border-color: var(--border-color);
+        }
+        
+        .text-primary {
+            color: var(--text-primary);
+        }
+        
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+        
+        .text-muted {
+            color: var(--text-muted);
+        }
+        
+        .project-card {
+            transition: all 0.3s ease;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        [data-theme="light"] .project-card:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+        
+        .skill-tag {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-tag:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .nav-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-dot:hover {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+        
+        .nav-dot.active {
+            background: var(--accent);
+            transform: scale(1.5);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 50;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+            background: var(--accent);
+            color: white;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .typing-animation::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .section-spacing {
+            padding: 4rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .section-spacing {
+                padding: 2rem 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-theme text-primary">
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <svg id="sun-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+        <svg id="moon-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+        </svg>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 space-y-4">
+        <div class="nav-dot active" data-section="about" title="About"></div>
+        <div class="nav-dot" data-section="education" title="Education"></div>
+        <div class="nav-dot" data-section="work" title="Work"></div>
+        <div class="nav-dot" data-section="skills" title="Skills"></div>
+        <div class="nav-dot" data-section="projects" title="Projects"></div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-8 py-8">
+        <!-- About Section -->
+        <section id="about" class="min-h-screen flex flex-col justify-center section-spacing">
+            <div class="mb-8">
+                <h1 class="text-5xl font-light mb-4 gradient-text animate-float">George Urgiles</h1>
+                <div class="text-xl text-secondary mb-8 leading-relaxed typing-animation">
+                    <p>I'm a first-generation Computer Science student at the University of San Francisco, specializing in artificial intelligence and machine learning. With hands-on experience developing AI-powered applications, secure desktop tools, and web systems, I focus on creating innovative solutions that bridge technology and human needs. My work spans from GPT-4 integration for document analysis to building robust password management systems, always emphasizing clean code and elegant user experiences.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="section-spacing">
+            <h2 class="text-3xl font-medium mb-8 gradient-text">Education</h2>
+            
+            <div class="mb-8 p-6 project-card rounded-lg hover:border-theme transition-colors">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.84L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.84l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-medium text-primary">Bachelor of Science in Computer Science</h3>
+                                <p class="text-secondary">University of San Francisco</p>
+                                <p class="text-sm text-muted">Expected Graduation: 2026</p>
+                            </div>
+                        </div>
+                        <div class="ml-15">
+                            <p class="text-secondary text-sm mb-3">
+                                <strong class="text-primary">Specialization:</strong> Artificial Intelligence & Machine Learning
+                            </p>
+                            <p class="text-secondary text-sm leading-relaxed mb-4">
+                                Focused on advanced AI technologies, machine learning algorithms, and software engineering principles. 
+                                Engaged in hands-on projects involving neural networks, data analysis, and full-stack development 
+                                while maintaining academic excellence as a first-generation college student.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="skill-tag">AI/ML</span>
+                                <span class="skill-tag">Data Structures</span>
+                                <span class="skill-tag">Algorithms</span>
+                                <span class="skill-tag">Software Engineering</span>
+                                <span class="skill-tag">Database Systems</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Experience Section -->
+        <section id="work" class="section-spacing">
+            <h2 class="text-3xl font-medium mb-8 gradient-text">Work Experience</h2>
+            
+            <!-- AI Development Intern -->
+            <div class="mb-8 p-6 project-card rounded-lg hover:border-theme transition-colors">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium text-primary">AI Development Intern</h3>
+                                <p class="text-secondary text-sm">Law Firm • 2024</p>
+                            </div>
+                        </div>
+                        <p class="text-secondary text-sm leading-relaxed ml-13">
+                            Developed a sophisticated client-facing website and implemented GPT-4 integration for automated document analysis, revolutionizing the firm's workflow efficiency through intelligent case processing and streamlined client management systems.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Software Engineering Intern -->
+            <div class="mb-8 p-6 project-card rounded-lg hover:border-theme transition-colors">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium text-primary">Software Engineering Intern</h3>
+                                <p class="text-secondary text-sm">Database Company • 2023</p>
+                            </div>
+                        </div>
+                        <p class="text-secondary text-sm leading-relaxed ml-13">
+                            Engineered robust data validation systems and implemented phone number formatting algorithms using Java, ensuring data integrity across enterprise systems and improving data quality by implementing comprehensive validation protocols.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section-spacing">
+            <h2 class="text-3xl font-medium mb-8 gradient-text">Skills</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Languages -->
+                <div class="p-6 project-card rounded-lg">
+                    <h3 class="text-lg font-medium mb-4 text-primary">Languages</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+                            <span class="text-secondary">Java</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                            <span class="text-secondary">JavaScript</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                            <span class="text-secondary">C#/.NET</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frameworks -->
+                <div class="p-6 project-card rounded-lg">
+                    <h3 class="text-lg font-medium mb-4 text-primary">Frameworks</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span class="text-secondary">React</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                            <span class="text-secondary">Swing</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span class="text-secondary">HTML/CSS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technologies -->
+                <div class="p-6 project-card rounded-lg">
+                    <h3 class="text-lg font-medium mb-4 text-primary">Technologies</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                            <span class="text-secondary">SQLite</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                            <span class="text-secondary">GPT-4 API</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                            <span class="text-secondary">Git</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Projects Section -->
+        <section id="projects" class="section-spacing">
+            <h2 class="text-3xl font-medium mb-4 gradient-text">Featured Projects</h2>
+            <p class="text-secondary mb-8">Here are some of my key projects showcasing my expertise in AI, machine learning, and software development.</p>
+            
+            <!-- Secure Password Manager -->
+            <div class="mb-12 project-card rounded-lg overflow-hidden">
+                <div class="bg-gradient-to-br from-gray-800 to-gray-900 h-48 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-medium mb-3 text-primary">Secure Password Manager</h3>
+                    <p class="text-secondary leading-relaxed mb-4">
+                        A robust desktop application featuring encrypted password storage, secure password generation, and intuitive site management with a sleek Swing interface. The system implements advanced encryption protocols to ensure maximum security while maintaining user-friendly functionality.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">SQLite</span>
+                        <span class="skill-tag">Swing</span>
+                        <span class="skill-tag">Encryption</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Immigration Database -->
+            <div class="mb-12 project-card rounded-lg overflow-hidden">
+                <div class="bg-gradient-to-br from-blue-800 to-purple-900 h-48 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-blue-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-medium mb-3 text-primary">AI Immigration Database</h3>
+                    <p class="text-secondary leading-relaxed mb-4">
+                        Comprehensive law firm management system powered by AI for processing asylum applications, featuring intelligent document analysis and case tracking. The platform leverages GPT-4 integration to automate document review processes, significantly improving efficiency.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">HTML/CSS</span>
+                        <span class="skill-tag">GPT-4 API</span>
+                        <span class="skill-tag">AI Integration</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Validation System -->
+            <div class="mb-12 project-card rounded-lg overflow-hidden">
+                <div class="bg-gradient-to-br from-green-800 to-teal-900 h-48 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-green-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                    </svg>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-medium mb-3 text-primary">Enterprise Data Validation System</h3>
+                    <p class="text-secondary leading-relaxed mb-4">
+                        Engineered robust data validation systems and phone number formatting algorithms for enterprise database management. The system ensures data integrity across multiple platforms while implementing comprehensive validation protocols.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Data Validation</span>
+                        <span class="skill-tag">Backend Systems</span>
+                        <span class="skill-tag">Enterprise</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-theme py-6">
+        <div class="max-w-4xl mx-auto px-8 flex justify-between items-center">
+            <p class="text-muted text-sm">© 2025 George Urgiles</p>
+            <div class="flex gap-4">
+                <a href="https://github.com/urgilesgeorge" target="_blank" class="text-muted hover:text-primary transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                    </svg>
+                </a>
+                <a href="https://linkedin.com/in/urgilesgeorge" target="_blank" class="text-muted hover:text-primary transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"/>
+                    </svg>
+                </a>
+                <a href="mailto:george@example.com" class="text-muted hover:text-primary transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        let currentTheme = 'dark';
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const themeText = document.getElementById('theme-text');
+
+            if (currentTheme === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                themeText.textContent = 'Switch to Dark';
+                currentTheme = 'light';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                themeText.textContent = 'Switch to Light';
+                currentTheme = 'dark';
+            }
+
+            // Store theme preference
+            const themePreference = currentTheme;
+            // Note: localStorage not available in Claude artifacts
+            // In a real app, you would use: localStorage.setItem('theme', themePreference);
+        }
+
+        // Initialize theme on page load
+        function initializeTheme() {
+            // In a real app, you would check localStorage:
+            // const savedTheme = localStorage.getItem('theme') || 'dark';
+            const savedTheme = 'dark';
+            
+            if (savedTheme !== currentTheme) {
+                toggleTheme();
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeTheme);
+    </script>
+</body>
+</html>
