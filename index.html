@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>George Urgiles</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -133,7 +134,7 @@
         }
         
         .theme-toggle:hover {
-            transform: rotate(180deg);
+            transform: scale(1.1);
             background: var(--accent);
             color: white;
         }
@@ -172,6 +173,21 @@
             .section-spacing {
                 padding: 2rem 0;
             }
+            #three-canvas {
+                height: 300px !important;
+            }
+        }
+        
+        #three-canvas {
+            width: 100%;
+            height: 400px;
+            border-radius: 12px;
+            margin-top: 2rem;
+            cursor: grab;
+        }
+        
+        #three-canvas:active {
+            cursor: grabbing;
         }
     </style>
 </head>
@@ -204,6 +220,9 @@
                 <div class="text-xl text-secondary mb-8 leading-relaxed typing-animation">
                     <p>I'm a first-generation Computer Science student at the University of San Francisco, specializing in artificial intelligence and machine learning. With hands-on experience developing AI-powered applications, secure desktop tools, and web systems, I focus on creating innovative solutions that bridge technology and human needs. My work spans from GPT-4 integration for document analysis to building robust password management systems, always emphasizing clean code and elegant user experiences.</p>
                 </div>
+                
+                <!-- 3D Desk Scene -->
+                <div id="three-canvas" class="bg-card border border-theme"></div>
             </div>
         </section>
 
@@ -223,7 +242,7 @@
                             <div>
                                 <h3 class="text-xl font-medium text-primary">Bachelor of Science in Computer Science</h3>
                                 <p class="text-secondary">University of San Francisco</p>
-                                <p class="text-sm text-muted">Expected Graduation: 2026</p>
+                                <p class="text-sm text-muted">Expected Graduation: 2028</p>
                             </div>
                         </div>
                         <div class="ml-15">
@@ -364,67 +383,132 @@
         <!-- Featured Projects Section -->
         <section id="projects" class="section-spacing">
             <h2 class="text-3xl font-medium mb-4 gradient-text">Featured Projects</h2>
-            <p class="text-secondary mb-8">Here are some of my key projects showcasing my expertise in AI, machine learning, and software development.</p>
+            <p class="text-secondary mb-8">Here are some of my key projects showcasing my expertise in systems programming, distributed systems, and creative development.</p>
             
-            <!-- Secure Password Manager -->
+            <!-- Custom Shell -->
             <div class="mb-12 project-card rounded-lg overflow-hidden">
-                <div class="bg-gradient-to-br from-gray-800 to-gray-900 h-48 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-gray-400 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                    </svg>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-medium mb-3 text-primary">Secure Password Manager</h3>
-                    <p class="text-secondary leading-relaxed mb-4">
-                        A robust desktop application featuring encrypted password storage, secure password generation, and intuitive site management with a sleek Swing interface. The system implements advanced encryption protocols to ensure maximum security while maintaining user-friendly functionality.
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">SQLite</span>
-                        <span class="skill-tag">Swing</span>
-                        <span class="skill-tag">Encryption</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- AI Immigration Database -->
-            <div class="mb-12 project-card rounded-lg overflow-hidden">
-                <div class="bg-gradient-to-br from-blue-800 to-purple-900 h-48 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-blue-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                    </svg>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-medium mb-3 text-primary">AI Immigration Database</h3>
-                    <p class="text-secondary leading-relaxed mb-4">
-                        Comprehensive law firm management system powered by AI for processing asylum applications, featuring intelligent document analysis and case tracking. The platform leverages GPT-4 integration to automate document review processes, significantly improving efficiency.
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-tag">JavaScript</span>
-                        <span class="skill-tag">HTML/CSS</span>
-                        <span class="skill-tag">GPT-4 API</span>
-                        <span class="skill-tag">AI Integration</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Data Validation System -->
-            <div class="mb-12 project-card rounded-lg overflow-hidden">
-                <div class="bg-gradient-to-br from-green-800 to-teal-900 h-48 flex items-center justify-center">
+                <div class="bg-gradient-to-br from-green-800 to-emerald-900 h-48 flex items-center justify-center">
                     <svg class="w-16 h-16 text-green-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                 </div>
                 <div class="p-6">
-                    <h3 class="text-xl font-medium mb-3 text-primary">Enterprise Data Validation System</h3>
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-medium text-primary">Custom Shell Terminal</h3>
+                        <a href="https://github.com/URGG/Shell" target="_blank" class="text-secondary hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                    </div>
                     <p class="text-secondary leading-relaxed mb-4">
-                        Engineered robust data validation systems and phone number formatting algorithms for enterprise database management. The system ensures data integrity across multiple platforms while implementing comprehensive validation protocols.
+                        A fully functional command-line shell built from scratch in Java, featuring custom command parsing, process execution, and file system operations. Implements core Unix shell features including piping, redirection, and built-in commands for a complete terminal experience.
                     </p>
                     <div class="flex flex-wrap gap-2">
                         <span class="skill-tag">Java</span>
-                        <span class="skill-tag">Data Validation</span>
-                        <span class="skill-tag">Backend Systems</span>
-                        <span class="skill-tag">Enterprise</span>
+                        <span class="skill-tag">Systems Programming</span>
+                        <span class="skill-tag">Process Management</span>
+                        <span class="skill-tag">CLI</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kafka Implementation -->
+            <div class="mb-12 project-card rounded-lg overflow-hidden">
+                <div class="bg-gradient-to-br from-purple-800 to-indigo-900 h-48 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-purple-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                    </svg>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-medium text-primary">Kafka Distributed System</h3>
+                        <a href="https://github.com/URGG/kafka" target="_blank" class="text-secondary hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <p class="text-secondary leading-relaxed mb-4">
+                        Implementation of Apache Kafka concepts in Java, exploring distributed message streaming and event-driven architecture. Built to understand real-time data pipelines, pub-sub patterns, and high-throughput messaging systems used in modern scalable applications.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Distributed Systems</span>
+                        <span class="skill-tag">Message Queues</span>
+                        <span class="skill-tag">Event Streaming</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Minecraft Mod -->
+            <div class="mb-12 project-card rounded-lg overflow-hidden">
+                <div class="bg-gradient-to-br from-amber-700 to-orange-900 h-48 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-amber-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/>
+                    </svg>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-medium text-primary">God Weapons Minecraft Mod</h3>
+                        <div class="flex items-center gap-3">
+                            <span class="text-yellow-500 flex items-center gap-1 text-sm">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                1
+                            </span>
+                            <a href="https://github.com/URGG/God-Weapons-MCmod" target="_blank" class="text-secondary hover:text-primary transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-secondary leading-relaxed mb-4">
+                        A creative Minecraft modification adding powerful custom weapons with unique abilities and effects. Demonstrates game development skills, mod architecture, and Java programming in a game engine environment. Features custom textures, balanced gameplay mechanics, and extensive configuration options.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Game Development</span>
+                        <span class="skill-tag">Minecraft Forge</span>
+                        <span class="skill-tag">Mod Development</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spotify Desk Thing -->
+            <div class="mb-12 project-card rounded-lg overflow-hidden">
+                <div class="bg-gradient-to-br from-cyan-800 to-blue-900 h-48 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-cyan-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                    </svg>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-medium text-primary">Spotify Desk Display</h3>
+                        <div class="flex items-center gap-3">
+                            <span class="text-yellow-500 flex items-center gap-1 text-sm">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                1
+                            </span>
+                            <a href="https://github.com/URGG/SPOTIFY_DESK_THING" target="_blank" class="text-secondary hover:text-primary transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-secondary leading-relaxed mb-4">
+                        A physical desk display that integrates with Spotify's API to show currently playing music, album art, and playback controls. Combines hardware and software development, featuring real-time API integration, embedded systems programming, and custom display interface design for an enhanced music listening experience.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag">Hardware Integration</span>
+                        <span class="skill-tag">Spotify API</span>
+                        <span class="skill-tag">IoT</span>
+                        <span class="skill-tag">Embedded Systems</span>
                     </div>
                 </div>
             </div>
@@ -463,41 +547,584 @@
             const html = document.documentElement;
             const sunIcon = document.getElementById('sun-icon');
             const moonIcon = document.getElementById('moon-icon');
-            const themeText = document.getElementById('theme-text');
 
             if (currentTheme === 'dark') {
                 html.setAttribute('data-theme', 'light');
                 sunIcon.classList.add('hidden');
                 moonIcon.classList.remove('hidden');
-                themeText.textContent = 'Switch to Dark';
                 currentTheme = 'light';
             } else {
                 html.setAttribute('data-theme', 'dark');
                 sunIcon.classList.remove('hidden');
                 moonIcon.classList.add('hidden');
-                themeText.textContent = 'Switch to Light';
                 currentTheme = 'dark';
             }
-
-            // Store theme preference
-            const themePreference = currentTheme;
-            // Note: localStorage not available in Claude artifacts
-            // In a real app, you would use: localStorage.setItem('theme', themePreference);
+            
+            // Update 3D scene colors based on theme
+            updateSceneTheme();
         }
 
-        // Initialize theme on page load
-        function initializeTheme() {
-            // In a real app, you would check localStorage:
-            // const savedTheme = localStorage.getItem('theme') || 'dark';
-            const savedTheme = 'dark';
+        // 3D Scene Setup
+        let scene, camera, renderer, desk, monitor, keyboard, mouse, pcCase;
+        let rgbLights = [];
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let rotation = { x: 0, y: 0 };
+        
+        function init3DScene() {
+            const canvas = document.getElementById('three-canvas');
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
             
-            if (savedTheme !== currentTheme) {
-                toggleTheme();
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(currentTheme === 'dark' ? 0x000000 : 0xffffff);
+            
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.set(0, 3, 6);
+            camera.lookAt(0, 1, 0);
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            renderer.shadowMap.enabled = true;
+            canvas.appendChild(renderer.domElement);
+            
+            // Mouse controls for rotation
+            canvas.addEventListener('mousedown', onMouseDown, false);
+            canvas.addEventListener('mousemove', onMouseMove, false);
+            canvas.addEventListener('mouseup', onMouseUp, false);
+            canvas.addEventListener('mouseleave', onMouseUp, false);
+            
+            // Touch controls for mobile
+            canvas.addEventListener('touchstart', onTouchStart, false);
+            canvas.addEventListener('touchmove', onTouchMove, false);
+            canvas.addEventListener('touchend', onTouchEnd, false);
+            
+            // Lighting - Enhanced professional lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            directionalLight.position.set(5, 10, 5);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 50;
+            scene.add(directionalLight);
+            
+            const pointLight = new THREE.PointLight(0x3b82f6, 1.5, 100);
+            pointLight.position.set(-2, 2, 2);
+            scene.add(pointLight);
+            
+            // Rim light for dramatic effect
+            const rimLight = new THREE.DirectionalLight(0x00aaff, 0.8);
+            rimLight.position.set(-5, 3, -5);
+            scene.add(rimLight);
+            
+            // Desk - Enhanced with better material
+            const deskGeometry = new THREE.BoxGeometry(6, 0.2, 3);
+            const deskMaterial = new THREE.MeshStandardMaterial({ 
+                color: currentTheme === 'dark' ? 0x2a2a2a : 0x8b7355,
+                roughness: 0.6,
+                metalness: 0.1
+            });
+            desk = new THREE.Mesh(deskGeometry, deskMaterial);
+            desk.position.y = 1;
+            desk.castShadow = true;
+            desk.receiveShadow = true;
+            scene.add(desk);
+            
+            // Add desk legs for realism
+            const legGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.9, 16);
+            const legMaterial = new THREE.MeshStandardMaterial({ 
+                color: currentTheme === 'dark' ? 0x1a1a1a : 0x6b5b45,
+                metalness: 0.5,
+                roughness: 0.5
+            });
+            
+            const legPositions = [
+                [-2.7, 0.55, -1.3],
+                [2.7, 0.55, -1.3],
+                [-2.7, 0.55, 1.3],
+                [2.7, 0.55, 1.3]
+            ];
+            
+            legPositions.forEach(pos => {
+                const leg = new THREE.Mesh(legGeometry, legMaterial);
+                leg.position.set(...pos);
+                leg.castShadow = true;
+                scene.add(leg);
+            });
+            
+            // Monitor - Enhanced with better proportions and detail
+            const monitorStandGeometry = new THREE.CylinderGeometry(0.15, 0.2, 0.5, 16);
+            const monitorMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x1a1a1a,
+                metalness: 0.9,
+                roughness: 0.2
+            });
+            const monitorStand = new THREE.Mesh(monitorStandGeometry, monitorMaterial);
+            monitorStand.position.set(0, 1.35, 0);
+            monitorStand.castShadow = true;
+            scene.add(monitorStand);
+            
+            const screenGeometry = new THREE.BoxGeometry(2.5, 1.5, 0.15);
+            const screenMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x0a0a0a,
+                metalness: 0.7,
+                roughness: 0.3
+            });
+            monitor = new THREE.Mesh(screenGeometry, screenMaterial);
+            monitor.position.set(0, 2.3, 0);
+            monitor.castShadow = true;
+            monitor.receiveShadow = true;
+            scene.add(monitor);
+            
+            // Monitor bezel glow
+            const bezelGlowGeometry = new THREE.BoxGeometry(2.52, 1.52, 0.01);
+            const bezelGlowMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x00aaff,
+                transparent: true,
+                opacity: 0.1
+            });
+            const bezelGlow = new THREE.Mesh(bezelGlowGeometry, bezelGlowMaterial);
+            bezelGlow.position.set(0, 2.3, 0.08);
+            scene.add(bezelGlow);
+            
+            // VS Code Interface on Monitor
+            const displayGeometry = new THREE.PlaneGeometry(2.3, 1.3);
+            const displayMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x1e1e1e,
+                emissive: 0x1e1e1e,
+                emissiveIntensity: 0.3
+            });
+            const display = new THREE.Mesh(displayGeometry, displayMaterial);
+            display.position.set(0, 2.3, 0.06);
+            scene.add(display);
+            
+            // VS Code Sidebar
+            const sidebarGeometry = new THREE.PlaneGeometry(0.3, 1.3);
+            const sidebarMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x252526,
+                transparent: true,
+                opacity: 0.9
+            });
+            const sidebar = new THREE.Mesh(sidebarGeometry, sidebarMaterial);
+            sidebar.position.set(-1, 2.3, 0.07);
+            scene.add(sidebar);
+            
+            // VS Code Top Bar
+            const topBarGeometry = new THREE.PlaneGeometry(2.3, 0.1);
+            const topBarMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x323233,
+                transparent: true,
+                opacity: 0.95
+            });
+            const topBar = new THREE.Mesh(topBarGeometry, topBarMaterial);
+            topBar.position.set(0, 2.9, 0.07);
+            scene.add(topBar);
+            
+            // Code lines with syntax highlighting
+            const codeLines = [
+                { color: 0xc586c0, width: 0.4 }, // purple - keyword
+                { color: 0x4ec9b0, width: 0.6 }, // teal - function
+                { color: 0xdcdcaa, width: 0.5 }, // yellow - variable
+                { color: 0x9cdcfe, width: 0.7 }, // blue - parameter
+                { color: 0xce9178, width: 0.3 }, // orange - string
+                { color: 0x4ec9b0, width: 0.5 }, // teal
+                { color: 0xc586c0, width: 0.6 }, // purple
+                { color: 0x6a9955, width: 0.8 }, // green - comment
+            ];
+            
+            for (let i = 0; i < codeLines.length; i++) {
+                const lineGeometry = new THREE.PlaneGeometry(codeLines[i].width, 0.04);
+                const lineMaterial = new THREE.MeshBasicMaterial({ 
+                    color: codeLines[i].color,
+                    transparent: true,
+                    opacity: 0.9
+                });
+                const line = new THREE.Mesh(lineGeometry, lineMaterial);
+                line.position.set(-0.3, 2.6 - (i * 0.12), 0.08);
+                scene.add(line);
+            }
+            
+            // PC Case - Enhanced with more detail
+            const pcGeometry = new THREE.BoxGeometry(0.8, 1.8, 1.5);
+            const pcMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x0a0a0a,
+                metalness: 0.95,
+                roughness: 0.1,
+                envMapIntensity: 1
+            });
+            pcCase = new THREE.Mesh(pcGeometry, pcMaterial);
+            pcCase.position.set(-2.2, 2, 0.5);
+            pcCase.castShadow = true;
+            pcCase.receiveShadow = true;
+            scene.add(pcCase);
+            
+            // PC Front panel details
+            const frontPanelGeometry = new THREE.BoxGeometry(0.78, 0.3, 0.02);
+            const frontPanelMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x1a1a1a,
+                metalness: 0.8,
+                roughness: 0.3
+            });
+            const frontPanel = new THREE.Mesh(frontPanelGeometry, frontPanelMaterial);
+            frontPanel.position.set(-2.2, 1.3, 1.26);
+            scene.add(frontPanel);
+            
+            // Power button glow
+            const powerButtonGeometry = new THREE.CircleGeometry(0.03, 16);
+            const powerButtonMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x00ff00,
+                emissive: 0x00ff00,
+                emissiveIntensity: 2
+            });
+            const powerButton = new THREE.Mesh(powerButtonGeometry, powerButtonMaterial);
+            powerButton.position.set(-2.2, 1.45, 1.27);
+            scene.add(powerButton);
+            
+            // Multiple RGB lighting strips inside PC - More vibrant
+            const rgbColors = [0xff0000, 0xff7700, 0xffff00, 0x00ff00, 0x0088ff, 0x8800ff, 0xff0088];
+            
+            for (let i = 0; i < 7; i++) {
+                const rgbLight = new THREE.PointLight(rgbColors[i], 1.2, 2.5);
+                rgbLight.position.set(-2.2, 1.3 + (i * 0.2), 1.2);
+                rgbLight.castShadow = true;
+                scene.add(rgbLight);
+                rgbLights.push(rgbLight);
+            }
+            
+            // RGB LED strips inside case (visible through glass)
+            for (let i = 0; i < 7; i++) {
+                const stripGeometry = new THREE.BoxGeometry(0.6, 0.02, 0.02);
+                const stripMaterial = new THREE.MeshBasicMaterial({ 
+                    color: rgbColors[i],
+                    emissive: rgbColors[i],
+                    emissiveIntensity: 2,
+                    transparent: true,
+                    opacity: 0.9
+                });
+                const strip = new THREE.Mesh(stripGeometry, stripMaterial);
+                strip.position.set(-2.2, 1.3 + (i * 0.2), 0.5);
+                scene.add(strip);
+                rgbLights.push({ strip, material: stripMaterial });
+            }
+            
+            // RGB Fans with animation
+            const fanGeometry = new THREE.RingGeometry(0.15, 0.25, 32);
+            
+            // Top Fan
+            const fan1Material = new THREE.MeshBasicMaterial({ 
+                color: 0xff00ff,
+                transparent: true,
+                opacity: 0.8,
+                side: THREE.DoubleSide,
+                emissive: 0xff00ff,
+                emissiveIntensity: 1
+            });
+            const fan1 = new THREE.Mesh(fanGeometry, fan1Material);
+            fan1.position.set(-1.81, 2.5, 0.5);
+            fan1.rotation.y = Math.PI / 2;
+            scene.add(fan1);
+            
+            // Fan blades
+            for (let i = 0; i < 3; i++) {
+                const bladeGeometry = new THREE.BoxGeometry(0.35, 0.03, 0.01);
+                const bladeMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0xff00ff,
+                    emissive: 0xff00ff,
+                    emissiveIntensity: 0.5
+                });
+                const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
+                blade.position.set(-1.82, 2.5, 0.5);
+                blade.rotation.set(0, Math.PI / 2, (Math.PI * 2 / 3) * i);
+                scene.add(blade);
+                rgbLights.push({ fan: blade, index: i });
+            }
+            
+            // Bottom Fan
+            const fan2Material = new THREE.MeshBasicMaterial({ 
+                color: 0x00ffff,
+                transparent: true,
+                opacity: 0.8,
+                side: THREE.DoubleSide,
+                emissive: 0x00ffff,
+                emissiveIntensity: 1
+            });
+            const fan2 = new THREE.Mesh(fanGeometry, fan2Material);
+            fan2.position.set(-1.81, 1.5, 0.5);
+            fan2.rotation.y = Math.PI / 2;
+            scene.add(fan2);
+            
+            for (let i = 0; i < 3; i++) {
+                const bladeGeometry = new THREE.BoxGeometry(0.35, 0.03, 0.01);
+                const bladeMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0x00ffff,
+                    emissive: 0x00ffff,
+                    emissiveIntensity: 0.5
+                });
+                const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
+                blade.position.set(-1.82, 1.5, 0.5);
+                blade.rotation.set(0, Math.PI / 2, (Math.PI * 2 / 3) * i);
+                scene.add(blade);
+                rgbLights.push({ fan: blade, index: i + 3 });
+            }
+            
+            // PC Glass panel - More realistic
+            const glassGeometry = new THREE.PlaneGeometry(0.7, 1.7);
+            const glassMaterial = new THREE.MeshPhysicalMaterial({ 
+                color: 0x88ccff,
+                metalness: 0,
+                roughness: 0.05,
+                transparent: true,
+                opacity: 0.15,
+                reflectivity: 1,
+                transmission: 0.9,
+                thickness: 0.5,
+                clearcoat: 1,
+                clearcoatRoughness: 0.1
+            });
+            const glass = new THREE.Mesh(glassGeometry, glassMaterial);
+            glass.position.set(-1.81, 2, 0.5);
+            glass.rotation.y = Math.PI / 2;
+            scene.add(glass);
+            
+            // Keyboard - Enhanced with RGB backlight
+            const keyboardGeometry = new THREE.BoxGeometry(1.5, 0.1, 0.5);
+            const keyboardMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x1a1a1a,
+                metalness: 0.6,
+                roughness: 0.4
+            });
+            keyboard = new THREE.Mesh(keyboardGeometry, keyboardMaterial);
+            keyboard.position.set(0, 1.15, 1);
+            keyboard.castShadow = true;
+            scene.add(keyboard);
+            
+            // Individual keys with subtle RGB
+            const keyGeometry = new THREE.BoxGeometry(0.08, 0.05, 0.08);
+            const keyMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x2a2a2a,
+                metalness: 0.3,
+                roughness: 0.7
+            });
+            
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 12; col++) {
+                    const key = new THREE.Mesh(keyGeometry, keyMaterial);
+                    key.position.set(
+                        -0.5 + (col * 0.09),
+                        1.2,
+                        0.85 + (row * 0.09)
+                    );
+                    scene.add(key);
+                }
+            }
+            
+            // Keyboard RGB underglow - more intense
+            const kbRGBLight = new THREE.PointLight(0x00ffff, 0.8, 2);
+            kbRGBLight.position.set(0, 1.1, 1);
+            scene.add(kbRGBLight);
+            rgbLights.push(kbRGBLight);
+            
+            // RGB underglow effect
+            const underglowGeometry = new THREE.PlaneGeometry(1.5, 0.5);
+            const underglowMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x00ffff,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide
+            });
+            const underglow = new THREE.Mesh(underglowGeometry, underglowMaterial);
+            underglow.position.set(0, 1.11, 1);
+            underglow.rotation.x = -Math.PI / 2;
+            scene.add(underglow);
+            rgbLights.push({ underglow, material: underglowMaterial });
+            
+            // Mouse - Enhanced gaming mouse
+            const mouseGeometry = new THREE.BoxGeometry(0.25, 0.15, 0.35);
+            const mouseMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x0a0a0a,
+                metalness: 0.8,
+                roughness: 0.2
+            });
+            mouse = new THREE.Mesh(mouseGeometry, mouseMaterial);
+            mouse.position.set(1.2, 1.18, 1);
+            mouse.castShadow = true;
+            scene.add(mouse);
+            
+            // Mouse scroll wheel
+            const scrollGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.1, 16);
+            const scrollMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x333333,
+                metalness: 0.5,
+                roughness: 0.5
+            });
+            const scroll = new THREE.Mesh(scrollGeometry, scrollMaterial);
+            scroll.position.set(1.2, 1.26, 0.95);
+            scroll.rotation.x = Math.PI / 2;
+            scene.add(scroll);
+            
+            // Mouse RGB with glow effect
+            const mouseLight = new THREE.PointLight(0xff00ff, 1, 1.5);
+            mouseLight.position.set(1.2, 1.25, 1);
+            scene.add(mouseLight);
+            rgbLights.push(mouseLight);
+            
+            // Mouse logo glow
+            const logoGeometry = new THREE.CircleGeometry(0.05, 16);
+            const logoMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xff00ff,
+                emissive: 0xff00ff,
+                emissiveIntensity: 2,
+                transparent: true,
+                opacity: 0.8
+            });
+            const logo = new THREE.Mesh(logoGeometry, logoMaterial);
+            logo.position.set(1.2, 1.26, 1);
+            logo.rotation.x = -Math.PI / 2;
+            scene.add(logo);
+            rgbLights.push({ logo, material: logoMaterial });
+            
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize, false);
+            
+            // Animation
+            animate();
+        }
+        
+        // Mouse drag controls
+        function onMouseDown(e) {
+            isDragging = true;
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        }
+        
+        function onMouseMove(e) {
+            if (!isDragging) return;
+            
+            const deltaX = e.clientX - previousMousePosition.x;
+            const deltaY = e.clientY - previousMousePosition.y;
+            
+            rotation.y += deltaX * 0.005;
+            rotation.x += deltaY * 0.005;
+            
+            // Limit vertical rotation
+            rotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, rotation.x));
+            
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        }
+        
+        function onMouseUp() {
+            isDragging = false;
+        }
+        
+        // Touch controls
+        function onTouchStart(e) {
+            if (e.touches.length === 1) {
+                isDragging = true;
+                previousMousePosition = { 
+                    x: e.touches[0].clientX, 
+                    y: e.touches[0].clientY 
+                };
             }
         }
+        
+        function onTouchMove(e) {
+            if (!isDragging || e.touches.length !== 1) return;
+            
+            e.preventDefault();
+            const deltaX = e.touches[0].clientX - previousMousePosition.x;
+            const deltaY = e.touches[0].clientY - previousMousePosition.y;
+            
+            rotation.y += deltaX * 0.005;
+            rotation.x += deltaY * 0.005;
+            
+            rotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, rotation.x));
+            
+            previousMousePosition = { 
+                x: e.touches[0].clientX, 
+                y: e.touches[0].clientY 
+            };
+        }
+        
+        function onTouchEnd() {
+            isDragging = false;
+        }
+        
+        function updateSceneTheme() {
+            if (!scene) return;
+            scene.background = new THREE.Color(currentTheme === 'dark' ? 0x000000 : 0xf8fafc);
+            if (desk) {
+                desk.material.color.setHex(currentTheme === 'dark' ? 0x2a2a2a : 0x8b7355);
+            }
+        }
+        
+        function onWindowResize() {
+            const canvas = document.getElementById('three-canvas');
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Smooth RGB color cycling with wave effect
+            const time = Date.now() * 0.001;
+            
+            rgbLights.forEach((item, index) => {
+                if (item.isPointLight || item.isLight) {
+                    // Point lights - smooth rainbow cycle
+                    const hue = (time * 40 + index * 40) % 360;
+                    item.color.setHSL(hue / 360, 1, 0.5);
+                } else if (item.strip) {
+                    // LED strips
+                    const hue = (time * 40 + index * 40) % 360;
+                    item.material.color.setHSL(hue / 360, 1, 0.5);
+                    item.material.emissive.setHSL(hue / 360, 1, 0.5);
+                } else if (item.fan) {
+                    // Rotate fan blades
+                    item.fan.rotation.z += 0.05;
+                } else if (item.underglow) {
+                    // Keyboard underglow pulse
+                    const hue = (time * 40) % 360;
+                    item.material.color.setHSL(hue / 360, 1, 0.5);
+                    item.material.opacity = 0.3 + Math.sin(time * 2) * 0.1;
+                } else if (item.logo) {
+                    // Mouse logo pulse
+                    const hue = (time * 40) % 360;
+                    item.material.color.setHSL(hue / 360, 1, 0.5);
+                    item.material.emissive.setHSL(hue / 360, 1, 0.5);
+                    item.material.opacity = 0.7 + Math.sin(time * 3) * 0.2;
+                }
+            });
+            
+            // Smooth camera rotation with easing
+            const radius = 6;
+            camera.position.x = radius * Math.sin(rotation.y) * Math.cos(rotation.x);
+            camera.position.y = 3 + radius * Math.sin(rotation.x);
+            camera.position.z = radius * Math.cos(rotation.y) * Math.cos(rotation.x);
+            camera.lookAt(0, 1.5, 0);
+            
+            // Add subtle floating animation to monitor
+            if (monitor) {
+                monitor.position.y = 2.3 + Math.sin(time * 0.5) * 0.01;
+            }
+            
+            renderer.render(scene, camera);
+        }
 
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', initializeTheme);
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            init3DScene();
+        });
     </script>
 </body>
 </html>
