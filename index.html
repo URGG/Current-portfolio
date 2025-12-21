@@ -3,1127 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>George Urgiles</title>
+    <title>George Urgiles | Systems Architect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
+        :root { --bg: #040406; --accent: #3b82f6; --glass: rgba(255, 255, 255, 0.02); }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; cursor: crosshair; }
+        body { background-color: var(--bg); color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
         
-        :root {
-            --bg-primary: #000000;
-            --bg-secondary: #111111;
-            --bg-card: #1a1a1a;
-            --border-color: #333333;
-            --text-primary: #ffffff;
-            --text-secondary: #cccccc;
-            --text-muted: #888888;
-            --accent: #3b82f6;
+        canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; opacity: 0.7; }
+        .content { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+        .hero-title { font-size: clamp(3rem, 10vw, 7.5rem); font-weight: 800; line-height: 0.9; letter-spacing: -0.05em; color: white; }
+        .section-tag { font-family: 'Fira Code', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 2rem; display: block; }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            padding: 3rem;
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
         }
-        
-        [data-theme="light"] {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-card: #f1f5f9;
-            --border-color: #e2e8f0;
-            --text-primary: #1e293b;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
-            --accent: #3b82f6;
+        .glass-card:hover { border-color: var(--accent); transform: translateY(-8px); background: rgba(255, 255, 255, 0.04); box-shadow: 0 20px 40px -20px rgba(59, 130, 246, 0.2); }
+
+        .skill-pill { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255,255,255,0.08); 
+            padding: 0.6rem 1.2rem; border-radius: 14px; 
+            font-size: 0.75rem; font-weight: 600; transition: 0.3s;
         }
-        
-        body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-        
-        .bg-theme {
-            background: var(--bg-primary);
-        }
-        
-        .bg-card {
-            background: var(--bg-card);
-        }
-        
-        .border-theme {
-            border-color: var(--border-color);
-        }
-        
-        .text-primary {
-            color: var(--text-primary);
-        }
-        
-        .text-secondary {
-            color: var(--text-secondary);
-        }
-        
-        .text-muted {
-            color: var(--text-muted);
-        }
-        
-        .project-card {
-            transition: all 0.3s ease;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-        }
-        
-        .project-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-        
-        [data-theme="light"] .project-card:hover {
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-        }
-        
-        .skill-tag {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-        
-        .skill-tag:hover {
-            background: var(--accent);
-            color: white;
-            transform: scale(1.05);
-        }
-        
-        .nav-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--text-muted);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .nav-dot:hover {
-            background: var(--accent);
-            transform: scale(1.3);
-        }
-        
-        .nav-dot.active {
-            background: var(--accent);
-            transform: scale(1.5);
-        }
-        
-        .theme-toggle {
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            z-index: 50;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .theme-toggle:hover {
-            transform: scale(1.1);
-            background: var(--accent);
-            color: white;
-        }
-        
-        .gradient-text {
-            background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .typing-animation::after {
-            content: '|';
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-        
-        .section-spacing {
-            padding: 4rem 0;
-        }
-        
-        @media (max-width: 768px) {
-            .section-spacing {
-                padding: 2rem 0;
-            }
-            #three-canvas {
-                height: 300px !important;
-            }
-        }
-        
-        #three-canvas {
-            width: 100%;
-            height: 400px;
-            border-radius: 12px;
-            margin-top: 2rem;
-            cursor: grab;
-        }
-        
-        #three-canvas:active {
-            cursor: grabbing;
-        }
+        .skill-pill:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.05); }
+
+        /* Bento Grid Layout */
+        .bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+        .b-8 { grid-column: span 8; }
+        .b-4 { grid-column: span 4; }
+        @media (max-width: 768px) { .b-8, .b-4 { grid-column: span 12; } }
+
+        section { padding: 140px 0; }
+        .nav-link { font-size: 0.7rem; font-family: 'Fira Code'; tracking: 0.2em; transition: 0.3s; }
+        .nav-link:hover { color: var(--accent); }
     </style>
 </head>
-<body class="bg-theme text-primary">
-    <!-- Theme Toggle -->
-    <div class="theme-toggle" onclick="toggleTheme()">
-        <svg id="sun-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-        </svg>
-        <svg id="moon-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-        </svg>
-    </div>
+<body>
 
-    <!-- Navigation -->
-    <nav class="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 space-y-4">
-        <div class="nav-dot active" data-section="about" title="About"></div>
-        <div class="nav-dot" data-section="education" title="Education"></div>
-        <div class="nav-dot" data-section="work" title="Work"></div>
-        <div class="nav-dot" data-section="skills" title="Skills"></div>
-        <div class="nav-dot" data-section="projects" title="Projects"></div>
+    <canvas id="canvas-scene"></canvas>
+
+    <nav class="fixed top-0 left-0 w-full p-8 z-50 flex justify-between items-center mix-blend-difference">
+        <div class="font-black text-2xl tracking-tighter">GU.</div>
+        <div class="flex gap-8 uppercase">
+            <a href="#journey" class="nav-link">Journey</a>
+            <a href="#stack" class="nav-link">Stack</a>
+            <a href="#projects" class="nav-link">Projects</a>
+        </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="max-w-4xl mx-auto px-8 py-8">
-        <!-- About Section -->
-        <section id="about" class="min-h-screen flex flex-col justify-center section-spacing">
-            <div class="mb-8">
-                <h1 class="text-5xl font-light mb-4 gradient-text animate-float">George Urgiles</h1>
-                <div class="text-xl text-secondary mb-8 leading-relaxed typing-animation">
-                    <p>I'm a first-generation Computer Science student at the University of San Francisco, specializing in artificial intelligence and machine learning. With hands-on experience developing AI-powered applications, secure desktop tools, and web systems, I focus on creating innovative solutions that bridge technology and human needs. My work spans from GPT-4 integration for document analysis to building robust password management systems, always emphasizing clean code and elegant user experiences.</p>
-                </div>
-                
-                <!-- 3D Desk Scene -->
-                <div id="three-canvas" class="bg-card border border-theme"></div>
-            </div>
+    <main class="content">
+        <section class="min-h-screen flex flex-col justify-center">
+            <span class="section-tag">Systems_Architect_v05</span>
+            <h1 class="hero-title">GEORGE<br><span class="text-blue-500">URGILES</span></h1>
+            <p class="mt-10 text-xl text-slate-400 max-w-2xl font-light leading-relaxed">
+                Computer Science @ USF. Specializing in high-throughput distributed systems and semantic AI automation.
+            </p>
         </section>
 
-        <!-- Education Section -->
-        <section id="education" class="section-spacing">
-            <h2 class="text-3xl font-medium mb-8 gradient-text">Education</h2>
-            
-            <div class="mb-8 p-6 project-card rounded-lg hover:border-theme transition-colors">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.84L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.84l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-medium text-primary">Bachelor of Science in Computer Science</h3>
-                                <p class="text-secondary">University of San Francisco</p>
-                                <p class="text-sm text-muted">Expected Graduation: 2028</p>
-                            </div>
-                        </div>
-                        <div class="ml-15">
-                            <p class="text-secondary text-sm mb-3">
-                                <strong class="text-primary">Specialization:</strong> Artificial Intelligence & Machine Learning
-                            </p>
-                            <p class="text-secondary text-sm leading-relaxed mb-4">
-                                Focused on advanced AI technologies, machine learning algorithms, and software engineering principles. 
-                                Engaged in hands-on projects involving neural networks, data analysis, and full-stack development 
-                                while maintaining academic excellence as a first-generation college student.
-                            </p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="skill-tag">AI/ML</span>
-                                <span class="skill-tag">Data Structures</span>
-                                <span class="skill-tag">Algorithms</span>
-                                <span class="skill-tag">Software Engineering</span>
-                                <span class="skill-tag">Database Systems</span>
-                            </div>
-                        </div>
-                    </div>
+        <section id="journey">
+            <span class="section-tag">01 // Career_Path</span>
+            <div class="bento">
+                <div class="glass-card b-8">
+                    <h4 class="text-blue-500 font-mono text-[10px] mb-4 uppercase tracking-widest">Experience</h4>
+                    <h3 class="text-3xl font-bold mb-2">Systems engineer Intern</h3>
+                    <p class="text-slate-500 mb-6 font-mono text-sm">Keller Law Group • 2023 - 2024</p>
+                    <p class="text-slate-400 leading-relaxed">
+                        Engineered custom document parsing pipelines using GPT-4 and vector embeddings. Automated the analysis of thousands of legal files, reducing manual audit time by over 40%.
+                    </p>
+                </div>
+                <div class="glass-card b-4">
+                    <h4 class="text-blue-500 font-mono text-[10px] mb-4 uppercase tracking-widest">Education</h4>
+                    <h3 class="text-2xl font-bold mb-2">University of San Francisco</h3>
+                    <p class="text-slate-500 mb-6 font-mono text-xs">B.S. Computer Science<br>2024—2028</p>
+                    <p class="text-slate-400 text-sm">Focusing on Low-Level Systems, AI Ethics, and Distributed Logic.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Work Experience Section -->
-        <section id="work" class="section-spacing">
-            <h2 class="text-3xl font-medium mb-8 gradient-text">Work Experience</h2>
-            
-            <!-- AI Development Intern -->
-            <div class="mb-8 p-6 project-card rounded-lg hover:border-theme transition-colors">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-medium text-primary">AI Development Intern</h3>
-                                <p class="text-secondary text-sm">Law Firm • 2024</p>
-                            </div>
-                        </div>
-                        <p class="text-secondary text-sm leading-relaxed ml-13">
-                            Developed a sophisticated client-facing website and implemented GPT-4 integration for automated document analysis, revolutionizing the firm's workflow efficiency through intelligent case processing and streamlined client management systems.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Software Engineering Intern -->
-            <div class="mb-8 p-6 project-card rounded-lg hover:border-theme transition-colors">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-medium text-primary">Software Engineering Intern</h3>
-                                <p class="text-secondary text-sm">Database Company • 2023</p>
-                            </div>
-                        </div>
-                        <p class="text-secondary text-sm leading-relaxed ml-13">
-                            Engineered robust data validation systems and implemented phone number formatting algorithms using Java, ensuring data integrity across enterprise systems and improving data quality by implementing comprehensive validation protocols.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Skills Section -->
-        <section id="skills" class="section-spacing">
-            <h2 class="text-3xl font-medium mb-8 gradient-text">Skills</h2>
-            
+        <section id="stack">
+            <span class="section-tag">02 // Technical_Matrix</span>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Languages -->
-                <div class="p-6 project-card rounded-lg">
-                    <h3 class="text-lg font-medium mb-4 text-primary">Languages</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
-                            <span class="text-secondary">Java</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                            <span class="text-secondary">JavaScript</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
-                            <span class="text-secondary">C#/.NET</span>
-                        </div>
+                <div class="glass-card">
+                    <h4 class="text-white font-bold mb-8 text-lg border-b border-white/5 pb-4">Languages</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-pill">Java</span> <span class="skill-pill">C++</span>
+                        <span class="skill-pill">Python</span> <span class="skill-pill">TypeScript</span>
+                        <span class="skill-pill">SQL</span> <span class="skill-pill">Bash</span>
                     </div>
                 </div>
-
-                <!-- Frameworks -->
-                <div class="p-6 project-card rounded-lg">
-                    <h3 class="text-lg font-medium mb-4 text-primary">Frameworks</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span class="text-secondary">React</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 bg-red-500 rounded-full"></div>
-                            <span class="text-secondary">Swing</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                            <span class="text-secondary">HTML/CSS</span>
-                        </div>
+                <div class="glass-card">
+                    <h4 class="text-white font-bold mb-8 text-lg border-b border-white/5 pb-4">Frameworks</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-pill">Kafka</span> <span class="skill-pill">Node.js</span>
+                        <span class="skill-pill">React</span> <span class="skill-pill">Express</span>
+                        <span class="skill-pill">OpenAI SDK</span> <span class="skill-pill">Tailwind</span>
                     </div>
                 </div>
-
-                <!-- Technologies -->
-                <div class="p-6 project-card rounded-lg">
-                    <h3 class="text-lg font-medium mb-4 text-primary">Technologies</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
-                            <span class="text-secondary">SQLite</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                            <span class="text-secondary">GPT-4 API</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
-                            <span class="text-secondary">Git</span>
-                        </div>
+                <div class="glass-card">
+                    <h4 class="text-white font-bold mb-8 text-lg border-b border-white/5 pb-4">Tools</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-pill">Docker</span> <span class="skill-pill">Git</span>
+                        <span class="skill-pill">Pinecone</span> <span class="skill-pill">Unix</span>
+                        <span class="skill-pill">AWS</span> <span class="skill-pill">GCP</span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Featured Projects Section -->
-        <section id="projects" class="section-spacing">
-            <h2 class="text-3xl font-medium mb-4 gradient-text">Featured Projects</h2>
-            <p class="text-secondary mb-8">Here are some of my key projects showcasing my expertise in systems programming, distributed systems, and creative development.</p>
-            
-            <!-- Custom Shell -->
-            <div class="mb-12 project-card rounded-lg overflow-hidden">
-                <div class="bg-gradient-to-br from-green-800 to-emerald-900 h-48 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-green-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-medium text-primary">Custom Shell Terminal</h3>
-                        <a href="https://github.com/URGG/Shell" target="_blank" class="text-secondary hover:text-primary transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
-                            </svg>
-                        </a>
+        <section id="projects">
+            <span class="section-tag">03 // Repository_Logs</span>
+            <div class="bento">
+                
+                <a href="https://github.com/URGG/god-weapons" target="_blank" class="glass-card b-8 group">
+                    <div class="flex justify-between items-start mb-12">
+                        <span class="text-blue-500 font-mono text-[10px]">SRC // SYSTEM_HARDENING</span>
+                        <span class="opacity-0 group-hover:opacity-100 transition-all font-mono text-[10px]">VIEW_GITHUB -></span>
                     </div>
-                    <p class="text-secondary leading-relaxed mb-4">
-                        A fully functional command-line shell built from scratch in Java, featuring custom command parsing, process execution, and file system operations. Implements core Unix shell features including piping, redirection, and built-in commands for a complete terminal experience.
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">Systems Programming</span>
-                        <span class="skill-tag">Process Management</span>
-                        <span class="skill-tag">CLI</span>
-                    </div>
-                </div>
-            </div>
+                    <h3 class="text-4xl font-bold mb-4">God Weapons</h3>
+                    <p class="text-slate-500 mb-8 max-w-lg">Advanced optimization framework for Unix systems. Includes modular scripts for node hardening and performance tuning.</p>
+                    <div class="flex gap-2"><span class="skill-pill">C++</span> <span class="skill-pill">SHELL</span></div>
+                </a>
 
-            <!-- Kafka Implementation -->
-            <div class="mb-12 project-card rounded-lg overflow-hidden">
-                <div class="bg-gradient-to-br from-purple-800 to-indigo-900 h-48 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-purple-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
-                    </svg>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-medium text-primary">Kafka Distributed System</h3>
-                        <a href="https://github.com/URGG/kafka" target="_blank" class="text-secondary hover:text-primary transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
-                            </svg>
-                        </a>
-                    </div>
-                    <p class="text-secondary leading-relaxed mb-4">
-                        Implementation of Apache Kafka concepts in Java, exploring distributed message streaming and event-driven architecture. Built to understand real-time data pipelines, pub-sub patterns, and high-throughput messaging systems used in modern scalable applications.
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">Distributed Systems</span>
-                        <span class="skill-tag">Message Queues</span>
-                        <span class="skill-tag">Event Streaming</span>
-                    </div>
-                </div>
-            </div>
+                <a href="https://github.com/URGG/Shell" target="_blank" class="glass-card b-4">
+                    <span class="text-blue-500 font-mono text-[10px] block mb-12">SRC // OS_KERNELS</span>
+                    <h3 class="text-2xl font-bold mb-4">Unix Shell</h3>
+                    <p class="text-slate-500 text-sm mb-6">Functional CLI implementation with piping and IO redirection.</p>
+                    <span class="skill-pill">JAVA</span>
+                </a>
 
-            <!-- Minecraft Mod -->
-            <div class="mb-12 project-card rounded-lg overflow-hidden">
-                <div class="bg-gradient-to-br from-amber-700 to-orange-900 h-48 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-amber-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/>
-                    </svg>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-medium text-primary">God Weapons Minecraft Mod</h3>
-                        <div class="flex items-center gap-3">
-                            <span class="text-yellow-500 flex items-center gap-1 text-sm">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                </svg>
-                                1
-                            </span>
-                            <a href="https://github.com/URGG/God-Weapons-MCmod" target="_blank" class="text-secondary hover:text-primary transition-colors">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <p class="text-secondary leading-relaxed mb-4">
-                        A creative Minecraft modification adding powerful custom weapons with unique abilities and effects. Demonstrates game development skills, mod architecture, and Java programming in a game engine environment. Features custom textures, balanced gameplay mechanics, and extensive configuration options.
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">Game Development</span>
-                        <span class="skill-tag">Minecraft Forge</span>
-                        <span class="skill-tag">Mod Development</span>
-                    </div>
-                </div>
-            </div>
+                <a href="https://github.com/URGG/kafka" target="_blank" class="glass-card b-4">
+                    <span class="text-blue-500 font-mono text-[10px] block mb-12">SRC // CLUSTERING</span>
+                    <h3 class="text-2xl font-bold mb-4">Kafka Node</h3>
+                    <p class="text-slate-500 text-sm mb-6">Distributed event log for message persistence and stream processing.</p>
+                    <span class="skill-pill">SCALA</span>
+                </a>
 
-            <!-- Spotify Desk Thing -->
-            <div class="mb-12 project-card rounded-lg overflow-hidden">
-                <div class="bg-gradient-to-br from-cyan-800 to-blue-900 h-48 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-cyan-300 animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
-                    </svg>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-medium text-primary">Spotify Desk Display</h3>
-                        <div class="flex items-center gap-3">
-                            <span class="text-yellow-500 flex items-center gap-1 text-sm">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                </svg>
-                                1
-                            </span>
-                            <a href="https://github.com/URGG/SPOTIFY_DESK_THING" target="_blank" class="text-secondary hover:text-primary transition-colors">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <p class="text-secondary leading-relaxed mb-4">
-                        A physical desk display that integrates with Spotify's API to show currently playing music, album art, and playback controls. Combines hardware and software development, featuring real-time API integration, embedded systems programming, and custom display interface design for an enhanced music listening experience.
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-tag">Hardware Integration</span>
-                        <span class="skill-tag">Spotify API</span>
-                        <span class="skill-tag">IoT</span>
-                        <span class="skill-tag">Embedded Systems</span>
-                    </div>
-                </div>
+                <a href="https://github.com/ItsRiprod/DeskThing" target="_blank" class="glass-card b-8">
+                    <span class="text-blue-500 font-mono text-[10px] block mb-12">SRC // HARDWARE</span>
+                    <h3 class="text-4xl font-bold mb-4">DeskThing</h3>
+                    <p class="text-slate-500 mb-8">Hardware dashboard hack that transforms Spotify Car Thing into a real-time system monitor.</p>
+                    <div class="flex gap-2"><span class="skill-pill">TS</span> <span class="skill-pill">IOT</span></div>
+                </a>
+
             </div>
         </section>
-    </div>
 
-    <!-- Footer -->
-    <footer class="border-t border-theme py-6">
-        <div class="max-w-4xl mx-auto px-8 flex justify-between items-center">
-            <p class="text-muted text-sm">© 2025 George Urgiles</p>
-            <div class="flex gap-4">
-                <a href="https://github.com/URGG" target="_blank" class="text-muted hover:text-primary transition-colors">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
-                    </svg>
-                </a>
-                <a href="https://www.linkedin.com/in/george-urgiles-02926b267/" target="_blank" class="text-muted hover:text-primary transition-colors">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"/>
-                    </svg>
-                </a>
-                <a href="mailto:georgeurgiles2@gmail.com" class="text-muted hover:text-primary transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </footer>
+        <footer class="py-24 text-center border-t border-white/5 opacity-20 font-mono text-[9px] tracking-[0.8em]">
+            SF_NODE_37.77N // STABLE_2025
+        </footer>
+    </main>
 
     <script>
-        // Theme toggle functionality
-        let currentTheme = 'dark';
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas-scene'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const sunIcon = document.getElementById('sun-icon');
-            const moonIcon = document.getElementById('moon-icon');
+        const torus = new THREE.Mesh(
+            new THREE.TorusGeometry(18, 0.04, 16, 100),
+            new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.1 })
+        );
+        scene.add(torus);
 
-            if (currentTheme === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                sunIcon.classList.add('hidden');
-                moonIcon.classList.remove('hidden');
-                currentTheme = 'light';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-                currentTheme = 'dark';
-            }
-            
-            // Update 3D scene colors based on theme
-            updateSceneTheme();
-        }
+        const workstation = new THREE.Group();
+        scene.add(workstation);
 
-        // 3D Scene Setup
-        let scene, camera, renderer, desk, monitor, keyboard, mouse, pcCase;
-        let rgbLights = [];
-        let isDragging = false;
-        let previousMousePosition = { x: 0, y: 0 };
-        let rotation = { x: 0, y: 0 };
-        
-        function init3DScene() {
-            const canvas = document.getElementById('three-canvas');
-            const width = canvas.clientWidth;
-            const height = canvas.clientHeight;
-            
-            // Scene
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(currentTheme === 'dark' ? 0x000000 : 0xffffff);
-            
-            // Camera
-            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-            camera.position.set(0, 3, 6);
-            camera.lookAt(0, 1, 0);
-            
-            // Renderer
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(width, height);
-            renderer.shadowMap.enabled = true;
-            canvas.appendChild(renderer.domElement);
-            
-            // Mouse controls for rotation
-            canvas.addEventListener('mousedown', onMouseDown, false);
-            canvas.addEventListener('mousemove', onMouseMove, false);
-            canvas.addEventListener('mouseup', onMouseUp, false);
-            canvas.addEventListener('mouseleave', onMouseUp, false);
-            
-            // Touch controls for mobile
-            canvas.addEventListener('touchstart', onTouchStart, false);
-            canvas.addEventListener('touchmove', onTouchMove, false);
-            canvas.addEventListener('touchend', onTouchEnd, false);
-            
-            // Lighting - Enhanced professional lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-            scene.add(ambientLight);
-            
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
-            directionalLight.position.set(5, 10, 5);
-            directionalLight.castShadow = true;
-            directionalLight.shadow.mapSize.width = 2048;
-            directionalLight.shadow.mapSize.height = 2048;
-            directionalLight.shadow.camera.near = 0.5;
-            directionalLight.shadow.camera.far = 50;
-            scene.add(directionalLight);
-            
-            const pointLight = new THREE.PointLight(0x3b82f6, 1.5, 100);
-            pointLight.position.set(-2, 2, 2);
-            scene.add(pointLight);
-            
-            // Rim light for dramatic effect
-            const rimLight = new THREE.DirectionalLight(0x00aaff, 0.8);
-            rimLight.position.set(-5, 3, -5);
-            scene.add(rimLight);
-            
-            // Desk - Enhanced with better material
-            const deskGeometry = new THREE.BoxGeometry(6, 0.2, 3);
-            const deskMaterial = new THREE.MeshStandardMaterial({ 
-                color: currentTheme === 'dark' ? 0x2a2a2a : 0x8b7355,
-                roughness: 0.6,
-                metalness: 0.1
-            });
-            desk = new THREE.Mesh(deskGeometry, deskMaterial);
-            desk.position.y = 1;
-            desk.castShadow = true;
-            desk.receiveShadow = true;
-            scene.add(desk);
-            
-            // Add desk legs for realism
-            const legGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.9, 16);
-            const legMaterial = new THREE.MeshStandardMaterial({ 
-                color: currentTheme === 'dark' ? 0x1a1a1a : 0x6b5b45,
-                metalness: 0.5,
-                roughness: 0.5
-            });
-            
-            const legPositions = [
-                [-2.7, 0.55, -1.3],
-                [2.7, 0.55, -1.3],
-                [-2.7, 0.55, 1.3],
-                [2.7, 0.55, 1.3]
-            ];
-            
-            legPositions.forEach(pos => {
-                const leg = new THREE.Mesh(legGeometry, legMaterial);
-                leg.position.set(...pos);
-                leg.castShadow = true;
-                scene.add(leg);
-            });
-            
-            // Monitor - Enhanced with better proportions and detail
-            const monitorStandGeometry = new THREE.CylinderGeometry(0.15, 0.2, 0.5, 16);
-            const monitorMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x1a1a1a,
-                metalness: 0.9,
-                roughness: 0.2
-            });
-            const monitorStand = new THREE.Mesh(monitorStandGeometry, monitorMaterial);
-            monitorStand.position.set(0, 1.35, 0);
-            monitorStand.castShadow = true;
-            scene.add(monitorStand);
-            
-            const screenGeometry = new THREE.BoxGeometry(2.5, 1.5, 0.15);
-            const screenMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x0a0a0a,
-                metalness: 0.7,
-                roughness: 0.3
-            });
-            monitor = new THREE.Mesh(screenGeometry, screenMaterial);
-            monitor.position.set(0, 2.3, 0);
-            monitor.castShadow = true;
-            monitor.receiveShadow = true;
-            scene.add(monitor);
-            
-            // Monitor bezel glow
-            const bezelGlowGeometry = new THREE.BoxGeometry(2.52, 1.52, 0.01);
-            const bezelGlowMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0x00aaff,
-                transparent: true,
-                opacity: 0.1
-            });
-            const bezelGlow = new THREE.Mesh(bezelGlowGeometry, bezelGlowMaterial);
-            bezelGlow.position.set(0, 2.3, 0.08);
-            scene.add(bezelGlow);
-            
-            // VS Code Interface on Monitor
-            const displayGeometry = new THREE.PlaneGeometry(2.3, 1.3);
-            const displayMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0x1e1e1e,
-                emissive: 0x1e1e1e,
-                emissiveIntensity: 0.3
-            });
-            const display = new THREE.Mesh(displayGeometry, displayMaterial);
-            display.position.set(0, 2.3, 0.06);
-            scene.add(display);
-            
-            // VS Code Sidebar
-            const sidebarGeometry = new THREE.PlaneGeometry(0.3, 1.3);
-            const sidebarMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0x252526,
-                transparent: true,
-                opacity: 0.9
-            });
-            const sidebar = new THREE.Mesh(sidebarGeometry, sidebarMaterial);
-            sidebar.position.set(-1, 2.3, 0.07);
-            scene.add(sidebar);
-            
-            // VS Code Top Bar
-            const topBarGeometry = new THREE.PlaneGeometry(2.3, 0.1);
-            const topBarMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0x323233,
-                transparent: true,
-                opacity: 0.95
-            });
-            const topBar = new THREE.Mesh(topBarGeometry, topBarMaterial);
-            topBar.position.set(0, 2.9, 0.07);
-            scene.add(topBar);
-            
-            // Code lines with syntax highlighting
-            const codeLines = [
-                { color: 0xc586c0, width: 0.4 }, // purple - keyword
-                { color: 0x4ec9b0, width: 0.6 }, // teal - function
-                { color: 0xdcdcaa, width: 0.5 }, // yellow - variable
-                { color: 0x9cdcfe, width: 0.7 }, // blue - parameter
-                { color: 0xce9178, width: 0.3 }, // orange - string
-                { color: 0x4ec9b0, width: 0.5 }, // teal
-                { color: 0xc586c0, width: 0.6 }, // purple
-                { color: 0x6a9955, width: 0.8 }, // green - comment
-            ];
-            
-            for (let i = 0; i < codeLines.length; i++) {
-                const lineGeometry = new THREE.PlaneGeometry(codeLines[i].width, 0.04);
-                const lineMaterial = new THREE.MeshBasicMaterial({ 
-                    color: codeLines[i].color,
-                    transparent: true,
-                    opacity: 0.9
-                });
-                const line = new THREE.Mesh(lineGeometry, lineMaterial);
-                line.position.set(-0.3, 2.6 - (i * 0.12), 0.08);
-                scene.add(line);
-            }
-            
-            // PC Case - Enhanced with more detail
-            const pcGeometry = new THREE.BoxGeometry(0.8, 1.8, 1.5);
-            const pcMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x0a0a0a,
-                metalness: 0.95,
-                roughness: 0.1,
-                envMapIntensity: 1
-            });
-            pcCase = new THREE.Mesh(pcGeometry, pcMaterial);
-            pcCase.position.set(-2.2, 2, 0.5);
-            pcCase.castShadow = true;
-            pcCase.receiveShadow = true;
-            scene.add(pcCase);
-            
-            // PC Front panel details
-            const frontPanelGeometry = new THREE.BoxGeometry(0.78, 0.3, 0.02);
-            const frontPanelMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x1a1a1a,
-                metalness: 0.8,
-                roughness: 0.3
-            });
-            const frontPanel = new THREE.Mesh(frontPanelGeometry, frontPanelMaterial);
-            frontPanel.position.set(-2.2, 1.3, 1.26);
-            scene.add(frontPanel);
-            
-            // Power button glow
-            const powerButtonGeometry = new THREE.CircleGeometry(0.03, 16);
-            const powerButtonMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0x00ff00,
-                emissive: 0x00ff00,
-                emissiveIntensity: 2
-            });
-            const powerButton = new THREE.Mesh(powerButtonGeometry, powerButtonMaterial);
-            powerButton.position.set(-2.2, 1.45, 1.27);
-            scene.add(powerButton);
-            
-            // Multiple RGB lighting strips inside PC - More vibrant
-            const rgbColors = [0xff0000, 0xff7700, 0xffff00, 0x00ff00, 0x0088ff, 0x8800ff, 0xff0088];
-            
-            for (let i = 0; i < 7; i++) {
-                const rgbLight = new THREE.PointLight(rgbColors[i], 1.2, 2.5);
-                rgbLight.position.set(-2.2, 1.3 + (i * 0.2), 1.2);
-                rgbLight.castShadow = true;
-                scene.add(rgbLight);
-                rgbLights.push(rgbLight);
-            }
-            
-            // RGB LED strips inside case (visible through glass)
-            for (let i = 0; i < 7; i++) {
-                const stripGeometry = new THREE.BoxGeometry(0.6, 0.02, 0.02);
-                const stripMaterial = new THREE.MeshBasicMaterial({ 
-                    color: rgbColors[i],
-                    emissive: rgbColors[i],
-                    emissiveIntensity: 2,
-                    transparent: true,
-                    opacity: 0.9
-                });
-                const strip = new THREE.Mesh(stripGeometry, stripMaterial);
-                strip.position.set(-2.2, 1.3 + (i * 0.2), 0.5);
-                scene.add(strip);
-                rgbLights.push({ strip, material: stripMaterial });
-            }
-            
-            // RGB Fans with animation
-            const fanGeometry = new THREE.RingGeometry(0.15, 0.25, 32);
-            
-            // Top Fan
-            const fan1Material = new THREE.MeshBasicMaterial({ 
-                color: 0xff00ff,
-                transparent: true,
-                opacity: 0.8,
-                side: THREE.DoubleSide,
-                emissive: 0xff00ff,
-                emissiveIntensity: 1
-            });
-            const fan1 = new THREE.Mesh(fanGeometry, fan1Material);
-            fan1.position.set(-1.81, 2.5, 0.5);
-            fan1.rotation.y = Math.PI / 2;
-            scene.add(fan1);
-            
-            // Fan blades
-            for (let i = 0; i < 3; i++) {
-                const bladeGeometry = new THREE.BoxGeometry(0.35, 0.03, 0.01);
-                const bladeMaterial = new THREE.MeshBasicMaterial({ 
-                    color: 0xff00ff,
-                    emissive: 0xff00ff,
-                    emissiveIntensity: 0.5
-                });
-                const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
-                blade.position.set(-1.82, 2.5, 0.5);
-                blade.rotation.set(0, Math.PI / 2, (Math.PI * 2 / 3) * i);
-                scene.add(blade);
-                rgbLights.push({ fan: blade, index: i });
-            }
-            
-            // Bottom Fan
-            const fan2Material = new THREE.MeshBasicMaterial({ 
-                color: 0x00ffff,
-                transparent: true,
-                opacity: 0.8,
-                side: THREE.DoubleSide,
-                emissive: 0x00ffff,
-                emissiveIntensity: 1
-            });
-            const fan2 = new THREE.Mesh(fanGeometry, fan2Material);
-            fan2.position.set(-1.81, 1.5, 0.5);
-            fan2.rotation.y = Math.PI / 2;
-            scene.add(fan2);
-            
-            for (let i = 0; i < 3; i++) {
-                const bladeGeometry = new THREE.BoxGeometry(0.35, 0.03, 0.01);
-                const bladeMaterial = new THREE.MeshBasicMaterial({ 
-                    color: 0x00ffff,
-                    emissive: 0x00ffff,
-                    emissiveIntensity: 0.5
-                });
-                const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
-                blade.position.set(-1.82, 1.5, 0.5);
-                blade.rotation.set(0, Math.PI / 2, (Math.PI * 2 / 3) * i);
-                scene.add(blade);
-                rgbLights.push({ fan: blade, index: i + 3 });
-            }
-            
-            // PC Glass panel - More realistic
-            const glassGeometry = new THREE.PlaneGeometry(0.7, 1.7);
-            const glassMaterial = new THREE.MeshPhysicalMaterial({ 
-                color: 0x88ccff,
-                metalness: 0,
-                roughness: 0.05,
-                transparent: true,
-                opacity: 0.15,
-                reflectivity: 1,
-                transmission: 0.9,
-                thickness: 0.5,
-                clearcoat: 1,
-                clearcoatRoughness: 0.1
-            });
-            const glass = new THREE.Mesh(glassGeometry, glassMaterial);
-            glass.position.set(-1.81, 2, 0.5);
-            glass.rotation.y = Math.PI / 2;
-            scene.add(glass);
-            
-            // Keyboard - Enhanced with RGB backlight
-            const keyboardGeometry = new THREE.BoxGeometry(1.5, 0.1, 0.5);
-            const keyboardMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x1a1a1a,
-                metalness: 0.6,
-                roughness: 0.4
-            });
-            keyboard = new THREE.Mesh(keyboardGeometry, keyboardMaterial);
-            keyboard.position.set(0, 1.15, 1);
-            keyboard.castShadow = true;
-            scene.add(keyboard);
-            
-            // Individual keys with subtle RGB
-            const keyGeometry = new THREE.BoxGeometry(0.08, 0.05, 0.08);
-            const keyMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x2a2a2a,
-                metalness: 0.3,
-                roughness: 0.7
-            });
-            
-            for (let row = 0; row < 4; row++) {
-                for (let col = 0; col < 12; col++) {
-                    const key = new THREE.Mesh(keyGeometry, keyMaterial);
-                    key.position.set(
-                        -0.5 + (col * 0.09),
-                        1.2,
-                        0.85 + (row * 0.09)
-                    );
-                    scene.add(key);
-                }
-            }
-            
-            // Keyboard RGB underglow - more intense
-            const kbRGBLight = new THREE.PointLight(0x00ffff, 0.8, 2);
-            kbRGBLight.position.set(0, 1.1, 1);
-            scene.add(kbRGBLight);
-            rgbLights.push(kbRGBLight);
-            
-            // RGB underglow effect
-            const underglowGeometry = new THREE.PlaneGeometry(1.5, 0.5);
-            const underglowMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0x00ffff,
-                transparent: true,
-                opacity: 0.3,
-                side: THREE.DoubleSide
-            });
-            const underglow = new THREE.Mesh(underglowGeometry, underglowMaterial);
-            underglow.position.set(0, 1.11, 1);
-            underglow.rotation.x = -Math.PI / 2;
-            scene.add(underglow);
-            rgbLights.push({ underglow, material: underglowMaterial });
-            
-            // Mouse - Enhanced gaming mouse
-            const mouseGeometry = new THREE.BoxGeometry(0.25, 0.15, 0.35);
-            const mouseMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x0a0a0a,
-                metalness: 0.8,
-                roughness: 0.2
-            });
-            mouse = new THREE.Mesh(mouseGeometry, mouseMaterial);
-            mouse.position.set(1.2, 1.18, 1);
-            mouse.castShadow = true;
-            scene.add(mouse);
-            
-            // Mouse scroll wheel
-            const scrollGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.1, 16);
-            const scrollMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x333333,
-                metalness: 0.5,
-                roughness: 0.5
-            });
-            const scroll = new THREE.Mesh(scrollGeometry, scrollMaterial);
-            scroll.position.set(1.2, 1.26, 0.95);
-            scroll.rotation.x = Math.PI / 2;
-            scene.add(scroll);
-            
-            // Mouse RGB with glow effect
-            const mouseLight = new THREE.PointLight(0xff00ff, 1, 1.5);
-            mouseLight.position.set(1.2, 1.25, 1);
-            scene.add(mouseLight);
-            rgbLights.push(mouseLight);
-            
-            // Mouse logo glow
-            const logoGeometry = new THREE.CircleGeometry(0.05, 16);
-            const logoMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0xff00ff,
-                emissive: 0xff00ff,
-                emissiveIntensity: 2,
-                transparent: true,
-                opacity: 0.8
-            });
-            const logo = new THREE.Mesh(logoGeometry, logoMaterial);
-            logo.position.set(1.2, 1.26, 1);
-            logo.rotation.x = -Math.PI / 2;
-            scene.add(logo);
-            rgbLights.push({ logo, material: logoMaterial });
-            
-            // Handle window resize
-            window.addEventListener('resize', onWindowResize, false);
-            
-            // Animation
-            animate();
-        }
-        
-        // Mouse drag controls
-        function onMouseDown(e) {
-            isDragging = true;
-            previousMousePosition = { x: e.clientX, y: e.clientY };
-        }
-        
-        function onMouseMove(e) {
-            if (!isDragging) return;
-            
-            const deltaX = e.clientX - previousMousePosition.x;
-            const deltaY = e.clientY - previousMousePosition.y;
-            
-            rotation.y += deltaX * 0.005;
-            rotation.x += deltaY * 0.005;
-            
-            // Limit vertical rotation
-            rotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, rotation.x));
-            
-            previousMousePosition = { x: e.clientX, y: e.clientY };
-        }
-        
-        function onMouseUp() {
-            isDragging = false;
-        }
-        
-        // Touch controls
-        function onTouchStart(e) {
-            if (e.touches.length === 1) {
-                isDragging = true;
-                previousMousePosition = { 
-                    x: e.touches[0].clientX, 
-                    y: e.touches[0].clientY 
-                };
-            }
-        }
-        
-        function onTouchMove(e) {
-            if (!isDragging || e.touches.length !== 1) return;
-            
-            e.preventDefault();
-            const deltaX = e.touches[0].clientX - previousMousePosition.x;
-            const deltaY = e.touches[0].clientY - previousMousePosition.y;
-            
-            rotation.y += deltaX * 0.005;
-            rotation.x += deltaY * 0.005;
-            
-            rotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, rotation.x));
-            
-            previousMousePosition = { 
-                x: e.touches[0].clientX, 
-                y: e.touches[0].clientY 
-            };
-        }
-        
-        function onTouchEnd() {
-            isDragging = false;
-        }
-        
-        function updateSceneTheme() {
-            if (!scene) return;
-            scene.background = new THREE.Color(currentTheme === 'dark' ? 0x000000 : 0xf8fafc);
-            if (desk) {
-                desk.material.color.setHex(currentTheme === 'dark' ? 0x2a2a2a : 0x8b7355);
-            }
-        }
-        
-        function onWindowResize() {
-            const canvas = document.getElementById('three-canvas');
-            const width = canvas.clientWidth;
-            const height = canvas.clientHeight;
-            
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-            renderer.setSize(width, height);
-        }
-        
+        const mon = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 0.12), new THREE.MeshStandardMaterial({ color: 0x0a0a0a }));
+        workstation.add(mon);
+
+        const canvasIDE = document.createElement('canvas');
+        canvasIDE.width = 512; canvasIDE.height = 256;
+        const ctx = canvasIDE.getContext('2d');
+        const ideTex = new THREE.CanvasTexture(canvasIDE);
+        const screen = new THREE.Mesh(new THREE.PlaneGeometry(5.8, 3.3), new THREE.MeshBasicMaterial({ map: ideTex }));
+        screen.position.z = 0.07;
+        workstation.add(screen);
+
+        const pc = new THREE.Mesh(new THREE.BoxGeometry(1.6, 4.4, 3), new THREE.MeshStandardMaterial({ color: 0x050505 }));
+        pc.position.set(6, -0.5, -2.5);
+        workstation.add(pc);
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+        const pL = new THREE.PointLight(0x3b82f6, 2);
+        pL.position.set(12, 12, 12);
+        scene.add(pL);
+
+        camera.position.z = 24;
+        workstation.position.x = 13;
+
+        let offset = 0;
         function animate() {
             requestAnimationFrame(animate);
-            
-            // Smooth RGB color cycling with wave effect
-            const time = Date.now() * 0.001;
-            
-            rgbLights.forEach((item, index) => {
-                if (item.isPointLight || item.isLight) {
-                    // Point lights - smooth rainbow cycle
-                    const hue = (time * 40 + index * 40) % 360;
-                    item.color.setHSL(hue / 360, 1, 0.5);
-                } else if (item.strip) {
-                    // LED strips
-                    const hue = (time * 40 + index * 40) % 360;
-                    item.material.color.setHSL(hue / 360, 1, 0.5);
-                    item.material.emissive.setHSL(hue / 360, 1, 0.5);
-                } else if (item.fan) {
-                    // Rotate fan blades
-                    item.fan.rotation.z += 0.05;
-                } else if (item.underglow) {
-                    // Keyboard underglow pulse
-                    const hue = (time * 40) % 360;
-                    item.material.color.setHSL(hue / 360, 1, 0.5);
-                    item.material.opacity = 0.3 + Math.sin(time * 2) * 0.1;
-                } else if (item.logo) {
-                    // Mouse logo pulse
-                    const hue = (time * 40) % 360;
-                    item.material.color.setHSL(hue / 360, 1, 0.5);
-                    item.material.emissive.setHSL(hue / 360, 1, 0.5);
-                    item.material.opacity = 0.7 + Math.sin(time * 3) * 0.2;
-                }
-            });
-            
-            // Smooth camera rotation with easing
-            const radius = 6;
-            camera.position.x = radius * Math.sin(rotation.y) * Math.cos(rotation.x);
-            camera.position.y = 3 + radius * Math.sin(rotation.x);
-            camera.position.z = radius * Math.cos(rotation.y) * Math.cos(rotation.x);
-            camera.lookAt(0, 1.5, 0);
-            
-            // Add subtle floating animation to monitor
-            if (monitor) {
-                monitor.position.y = 2.3 + Math.sin(time * 0.5) * 0.01;
-            }
-            
+            torus.rotation.x += 0.001; torus.rotation.y += 0.002;
+            offset -= 2.5;
+            ctx.fillStyle = '#050505'; ctx.fillRect(0,0,512,256);
+            ctx.fillStyle = '#3b82f6'; ctx.font = '16px Fira Code';
+            for(let i=0; i<15; i++) ctx.fillText(`> compiling_module_${i} ... [OK]`, 25, (i * 35) + (offset % 500) + 256);
+            ideTex.needsUpdate = true;
+            workstation.rotation.y = THREE.MathUtils.lerp(workstation.rotation.y, (mouseX * 0.35), 0.05);
             renderer.render(scene, camera);
         }
 
-        // Initialize everything when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            init3DScene();
+        let mouseX = 0;
+        window.addEventListener('mousemove', (e) => mouseX = (e.clientX / window.innerWidth) - 0.5);
+        window.addEventListener('scroll', () => {
+            const scroll = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+            workstation.position.y = scroll * 22;
+            camera.position.z = 24 - (scroll * 14);
+        });
+        animate();
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
 </body>
