@@ -3,224 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>George Urgiles | Systems Architect</title>
+    <title>George Urgiles | Systems & Software Engineer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #040406; --accent: #3b82f6; --glass: rgba(255, 255, 255, 0.02); }
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; cursor: crosshair; }
+        :root { --bg: #020204; --accent: #3b82f6; --glass: rgba(255, 255, 255, 0.02); }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { background-color: var(--bg); color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
         
-        canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; opacity: 0.7; }
+        canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
         .content { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
-        .hero-title { font-size: clamp(3rem, 10vw, 7.5rem); font-weight: 800; line-height: 0.9; letter-spacing: -0.05em; color: white; }
-        .section-tag { font-family: 'Fira Code', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 2rem; display: block; }
-
+        .hero-title { font-size: clamp(3.5rem, 12vw, 9rem); font-weight: 800; line-height: 0.8; letter-spacing: -0.06em; color: white; }
+        
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(25px);
+            backdrop-filter: blur(30px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 30px;
-            padding: 3rem;
-            transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+            border-radius: 32px;
+            overflow: hidden;
+            opacity: 0; 
+            transform: translateY(30px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .glass-card:hover { border-color: var(--accent); transform: translateY(-8px); background: rgba(255, 255, 255, 0.04); box-shadow: 0 20px 40px -20px rgba(59, 130, 246, 0.2); }
+        .glass-card:hover { border-color: var(--accent); transform: scale(1.01); background: rgba(255, 255, 255, 0.04); }
+
+        .project-img {
+            width: 100%; height: 220px; object-fit: cover;
+            opacity: 0.5; transition: 0.5s; filter: grayscale(100%);
+        }
+        .glass-card:hover .project-img { opacity: 0.9; filter: grayscale(0%); }
 
         .skill-pill { 
             background: rgba(255, 255, 255, 0.03); 
             border: 1px solid rgba(255,255,255,0.08); 
-            padding: 0.6rem 1.2rem; border-radius: 14px; 
-            font-size: 0.75rem; font-weight: 600; transition: 0.3s;
+            padding: 0.4rem 0.8rem; border-radius: 10px; 
+            font-size: 0.65rem; font-weight: 600; font-family: 'Fira Code', monospace;
+            color: var(--accent);
         }
-        .skill-pill:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.05); }
 
-        /* Bento Grid Layout */
-        .bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+        .terminal-box {
+            font-family: 'Fira Code', monospace;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            color: #4ade80;
+            min-height: 250px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #term-input { color: #4ade80; caret-color: #4ade80; width: 100%; }
+
+        section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 100px 0; }
+        .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
         .b-8 { grid-column: span 8; }
         .b-4 { grid-column: span 4; }
-        @media (max-width: 768px) { .b-8, .b-4 { grid-column: span 12; } }
-
-        section { padding: 140px 0; }
-        .nav-link { font-size: 0.7rem; font-family: 'Fira Code'; tracking: 0.2em; transition: 0.3s; }
-        .nav-link:hover { color: var(--accent); }
+        .b-6 { grid-column: span 6; }
+        @media (max-width: 768px) { .b-8, .b-4, .b-6 { grid-column: span 12; } }
     </style>
 </head>
 <body>
 
     <canvas id="canvas-scene"></canvas>
 
-    <nav class="fixed top-0 left-0 w-full p-8 z-50 flex justify-between items-center mix-blend-difference">
-        <div class="font-black text-2xl tracking-tighter">GU.</div>
-        <div class="flex gap-8 uppercase">
-            <a href="#journey" class="nav-link">Journey</a>
-            <a href="#stack" class="nav-link">Stack</a>
-            <a href="#projects" class="nav-link">Projects</a>
-        </div>
-    </nav>
-
     <main class="content">
-        <section class="min-h-screen flex flex-col justify-center">
-            <span class="section-tag">Systems_Architect_v05</span>
-            <h1 class="hero-title">GEORGE<br><span class="text-blue-500">URGILES</span></h1>
-            <p class="mt-10 text-xl text-slate-400 max-w-2xl font-light leading-relaxed">
-                Computer Science @ USF. Specializing in high-throughput distributed systems and semantic AI automation.
+        <section id="hero">
+            <h1 class="hero-title">GEORGE<br><span class="text-blue-600">URGILES</span></h1>
+            <p class="mt-12 text-2xl text-slate-400 max-w-2xl font-light leading-relaxed">
+                Computer Science @ USFCA. Engineering resilient systems at the intersection of low-level architecture and AI infrastructure.
             </p>
         </section>
 
         <section id="journey">
-            <span class="section-tag">01 // Career_Path</span>
-            <div class="bento">
-                <div class="glass-card b-8">
-                    <h4 class="text-blue-500 font-mono text-[10px] mb-4 uppercase tracking-widest">Experience</h4>
-                    <h3 class="text-3xl font-bold mb-2">Systems engineer Intern</h3>
-                    <p class="text-slate-500 mb-6 font-mono text-sm">Keller Law Group • 2023 - 2024</p>
-                    <p class="text-slate-400 leading-relaxed">
-                        Engineered custom document parsing pipelines using GPT-4 and vector embeddings. Automated the analysis of thousands of legal files, reducing manual audit time by over 40%.
-                    </p>
-                </div>
-                <div class="glass-card b-4">
-                    <h4 class="text-blue-500 font-mono text-[10px] mb-4 uppercase tracking-widest">Education</h4>
-                    <h3 class="text-2xl font-bold mb-2">University of San Francisco</h3>
-                    <p class="text-slate-500 mb-6 font-mono text-xs">B.S. Computer Science<br>2024—2028</p>
-                    <p class="text-slate-400 text-sm">Focusing on Low-Level Systems, AI Ethics, and Distributed Logic.</p>
-                </div>
+            <span class="text-blue-500 font-mono text-[10px] tracking-widest uppercase mb-8 block">Career_Manifest</span>
+            <div class="glass-card w-full mb-8 p-10">
+                <span class="text-slate-500 font-mono text-[10px] mb-2 block italic">2023 - 2024</span>
+                <h3 class="text-3xl font-bold">Systems Engineering Intern</h3>
+                <h4 class="text-blue-500 text-xl font-semibold mb-6">Keller Law Group</h4>
+                <p class="text-slate-400 text-lg leading-relaxed max-w-3xl">
+                    Optimized document parsing engines and GPT-4 pipelines. Specializing in high-throughput data extraction and semantic clustering for legal-tech automation.
+                </p>
             </div>
-        </section>
-
-        <section id="stack">
-            <span class="section-tag">02 // Technical_Matrix</span>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass-card">
-                    <h4 class="text-white font-bold mb-8 text-lg border-b border-white/5 pb-4">Languages</h4>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-pill">Java</span> <span class="skill-pill">C++</span>
-                        <span class="skill-pill">Python</span> <span class="skill-pill">TypeScript</span>
-                        <span class="skill-pill">SQL</span> <span class="skill-pill">Bash</span>
-                    </div>
-                </div>
-                <div class="glass-card">
-                    <h4 class="text-white font-bold mb-8 text-lg border-b border-white/5 pb-4">Frameworks</h4>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-pill">Kafka</span> <span class="skill-pill">Node.js</span>
-                        <span class="skill-pill">React</span> <span class="skill-pill">Express</span>
-                        <span class="skill-pill">OpenAI SDK</span> <span class="skill-pill">Tailwind</span>
-                    </div>
-                </div>
-                <div class="glass-card">
-                    <h4 class="text-white font-bold mb-8 text-lg border-b border-white/5 pb-4">Tools</h4>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-pill">Docker</span> <span class="skill-pill">Git</span>
-                        <span class="skill-pill">Pinecone</span> <span class="skill-pill">Unix</span>
-                        <span class="skill-pill">AWS</span> <span class="skill-pill">GCP</span>
-                    </div>
+            <div class="glass-card w-full p-10">
+                <h3 class="text-2xl font-bold mb-4">Univ. of San Francisco</h3>
+                <p class="text-blue-500 font-mono text-sm mb-6">B.S. Computer Science | Class of 2028</p>
+                <div class="flex flex-wrap gap-3">
+                    <span class="skill-pill">Distributed Logic</span>
+                    <span class="skill-pill">OS Architecture</span>
+                    <span class="skill-pill">Python / Java / C++</span>
                 </div>
             </div>
         </section>
 
         <section id="projects">
-            <span class="section-tag">03 // Repository_Logs</span>
-            <div class="bento">
+            <span class="text-blue-500 font-mono text-[10px] tracking-widest uppercase mb-8 block">Project_Logs</span>
+            <div class="bento-grid">
                 
-                <a href="https://github.com/URGG/God-Weapons-MCmod" target="_blank" class="glass-card b-8 group">
-                    <div class="flex justify-between items-start mb-12">
-                        <span class="text-blue-500 font-mono text-[10px]">SRC // SYSTEM_HARDENING</span>
-                        <span class="opacity-0 group-hover:opacity-100 transition-all font-mono text-[10px]">VIEW_GITHUB -></span>
+                <a href="https://github.com/FoundationGames/EnhancedBlockEntities" target="_blank" class="glass-card b-8 group">
+                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=1200" class="project-img" alt="EBE Optimization">
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-3xl font-bold">Enhanced Block Entities</h3>
+                            <span class="bg-green-500/10 text-green-400 text-[10px] px-2 py-1 rounded border border-green-500/20">25M+ DOWNLOADS</span>
+                        </div>
+                        <p class="text-slate-400 mb-6 text-sm">Open-source Minecraft optimization mod using custom vertex-consumer logic to reduce rendering overhead. Co-authored and maintained for global distribution.</p>
+                        <div class="flex gap-2">
+                            <span class="skill-pill">Java</span> <span class="skill-pill">OpenGL</span> <span class="skill-pill">Optimization</span>
+                        </div>
                     </div>
-                    <h3 class="text-4xl font-bold mb-4">God Weapons</h3>
-                    <p class="text-slate-500 mb-8 max-w-lg">Advanced optimization framework for Unix systems. Includes modular scripts for node hardening and performance tuning.</p>
-                    <div class="flex gap-2"><span class="skill-pill">Java</span> <span class="skill-pill">Game modding</span></div>
                 </a>
 
-                <a href="https://github.com/URGG/Shell" target="_blank" class="glass-card b-4">
-                    <span class="text-blue-500 font-mono text-[10px] block mb-12">SRC // OS_KERNELS</span>
-                    <h3 class="text-2xl font-bold mb-4">Unix Shell</h3>
-                    <p class="text-slate-500 text-sm mb-6">Functional CLI implementation with piping and IO redirection.</p>
-                    <span class="skill-pill">JAVA</span>
+                <a href="https://github.com/URGG/SPOTIFY_DESK_THING" target="_blank" class="glass-card b-4 group">
+                    <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=600" class="project-img" alt="Spotify Monitor">
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold mb-2">Spotify Desk Thing</h3>
+                        <p class="text-slate-500 text-xs mb-6">Hardware-interfacing Python script for real-time playback telemetry on micro-displays.</p>
+                        <span class="skill-pill">Python</span>
+                    </div>
                 </a>
 
-                <a href="https://github.com/URGG/kafka" target="_blank" class="glass-card b-4">
-                    <span class="text-blue-500 font-mono text-[10px] block mb-12">SRC // CLUSTERING</span>
-                    <h3 class="text-2xl font-bold mb-4">Kafka Node</h3>
-                    <p class="text-slate-500 text-sm mb-6">Distributed event log for message persistence and stream processing.</p>
-                    <span class="skill-pill">SCALA</span>
+                <a href="https://github.com/URGG/LA-PULSE" target="_blank" class="glass-card b-6 group">
+                    <img src="https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&q=80&w=1200" class="project-img" alt="LA Pulse">
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-2">LA-PULSE</h3>
+                        <p class="text-slate-500 text-sm mb-6">Full-stack iOS application for real-time event discovery in Los Angeles. Engineered with TypeScript.</p>
+                        <div class="flex gap-2">
+                            <span class="skill-pill">TypeScript</span> <span class="skill-pill">iOS</span>
+                        </div>
+                    </div>
                 </a>
 
-                <a href="https://github.com/URGG/SPOTIFY_DESK_THING" target="_blank" class="glass-card b-8">
-                    <span class="text-blue-500 font-mono text-[10px] block mb-12">SRC // HARDWARE</span>
-                    <h3 class="text-4xl font-bold mb-4">DeskThing</h3>
-                    <p class="text-slate-500 mb-8">Hardware dashboard hack that transforms Spotify Car Thing into a real-time system monitor.</p>
-                    <div class="flex gap-2"><span class="skill-pill">Python</span> <span class="skill-pill">IOT</span></div>
+                <a href="https://github.com/URGG/Shell" target="_blank" class="glass-card b-6 group">
+                    <img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&q=80&w=800" class="project-img" alt="Shell">
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-2">Unix Shell</h3>
+                        <p class="text-slate-500 text-sm mb-6">POSIX-compliant Java shell with advanced piping, job control, and signal handling.</p>
+                        <span class="skill-pill">Java</span> <span class="skill-pill">Kernel Logic</span>
+                    </div>
                 </a>
 
+                <div class="glass-card col-span-12 p-8" id="terminal-trigger">
+                    <div class="terminal-box" id="terminal" onclick="document.getElementById('term-input').focus()">
+                        <div id="terminal-content" class="mb-2">
+                            <div class="text-blue-500 font-bold mb-1">GeorgeOS v1.0.4 (tty1) - Initialized successfully.</div>
+                            <div>Welcome, guest. Type <span class="text-white">'help'</span> to see available system commands.</div>
+                        </div>
+                        <div class="flex">
+                            <span class="text-green-400 mr-2">guest@urgiles:~$</span>
+                            <input type="text" id="term-input" class="bg-transparent border-none outline-none flex-1" autofocus spellcheck="false" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <footer class="py-24 text-center border-t border-white/5 opacity-20 font-mono text-[9px] tracking-[0.8em]">
-            SF_NODE_37.77N // STABLE_2025
+        <footer class="py-20 text-center opacity-20 font-mono text-[9px] tracking-[0.5em]">
+            SYSTEM_STABLE_V9 // SF_CA
         </footer>
     </main>
 
     <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- THREE.JS SCENE ---
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas-scene'), antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
 
-        const torus = new THREE.Mesh(
-            new THREE.TorusGeometry(18, 0.04, 16, 100),
-            new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.1 })
-        );
+        const torus = new THREE.Mesh(new THREE.TorusGeometry(18, 0.05, 16, 100), new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.1 }));
         scene.add(torus);
 
         const workstation = new THREE.Group();
         scene.add(workstation);
-
-        const mon = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 0.12), new THREE.MeshStandardMaterial({ color: 0x0a0a0a }));
-        workstation.add(mon);
-
-        const canvasIDE = document.createElement('canvas');
-        canvasIDE.width = 512; canvasIDE.height = 256;
-        const ctx = canvasIDE.getContext('2d');
-        const ideTex = new THREE.CanvasTexture(canvasIDE);
-        const screen = new THREE.Mesh(new THREE.PlaneGeometry(5.8, 3.3), new THREE.MeshBasicMaterial({ map: ideTex }));
-        screen.position.z = 0.07;
-        workstation.add(screen);
-
-        const pc = new THREE.Mesh(new THREE.BoxGeometry(1.6, 4.4, 3), new THREE.MeshStandardMaterial({ color: 0x050505 }));
-        pc.position.set(6, -0.5, -2.5);
-        workstation.add(pc);
-
+        workstation.add(new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 0.1), new THREE.MeshStandardMaterial({ color: 0x0a0a0a })));
+        workstation.add(new THREE.Mesh(new THREE.BoxGeometry(1.5, 4.5, 3), new THREE.MeshStandardMaterial({ color: 0x050505 }))).position.set(6, -0.5, -2);
+        
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-        const pL = new THREE.PointLight(0x3b82f6, 2);
-        pL.position.set(12, 12, 12);
-        scene.add(pL);
+        const pL = new THREE.PointLight(0x3b82f6, 1.5); pL.position.set(10, 10, 10); scene.add(pL);
 
-        camera.position.z = 24;
-        workstation.position.x = 13;
+        camera.position.z = 25; workstation.position.x = 12;
 
-        let offset = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            torus.rotation.x += 0.001; torus.rotation.y += 0.002;
-            offset -= 2.5;
-            ctx.fillStyle = '#050505'; ctx.fillRect(0,0,512,256);
-            ctx.fillStyle = '#3b82f6'; ctx.font = '16px Fira Code';
-            for(let i=0; i<15; i++) ctx.fillText(`> compiling_module_${i} ... [OK]`, 25, (i * 35) + (offset % 500) + 256);
-            ideTex.needsUpdate = true;
-            workstation.rotation.y = THREE.MathUtils.lerp(workstation.rotation.y, (mouseX * 0.35), 0.05);
-            renderer.render(scene, camera);
-        }
+        // --- GSAP ORCHESTRATION ---
+        gsap.to(workstation.position, { scrollTrigger: { trigger: "#journey", scrub: 1.5 }, x: -10, y: 2 });
+        gsap.to(workstation.rotation, { scrollTrigger: { trigger: "#projects", scrub: 1.5 }, y: Math.PI / 3, z: 0.1 });
 
-        let mouseX = 0;
-        window.addEventListener('mousemove', (e) => mouseX = (e.clientX / window.innerWidth) - 0.5);
-        window.addEventListener('scroll', () => {
-            const scroll = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-            workstation.position.y = scroll * 22;
-            camera.position.z = 24 - (scroll * 14);
+        gsap.utils.toArray('.glass-card').forEach(card => {
+            gsap.to(card, { scrollTrigger: { trigger: card, start: "top 90%" }, opacity: 1, y: 0, duration: 1.2, ease: "power3.out" });
         });
+
+        function animate() { requestAnimationFrame(animate); torus.rotation.x += 0.001; renderer.render(scene, camera); }
         animate();
+
+        // --- FUNCTIONAL TERMINAL ---
+        const input = document.getElementById('term-input');
+        const content = document.getElementById('terminal-content');
+        const terminal = document.getElementById('terminal');
+
+        const commands = {
+            help: "Commands: [ls, about, stats, experience, clear, color --red, color --blue]",
+            ls: "Projects Found:\n- Enhanced_Block_Entities (25M+ downloads)\n- LA-PULSE\n- Spotify_Desk_Thing\n- Unix_Shell",
+            stats: "Project metrics loaded:\n- EBE: 25.4M Downloads\n- Modrinth Top 50 Optimization Mods",
+            about: "George Urgiles: Systems Engineer & CS Student at USFCA. High-scale optimization specialist.",
+            clear: "CLEAR"
+        };
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const val = input.value.toLowerCase().trim();
+                const line = document.createElement('div');
+                line.innerHTML = `<span class="text-green-400">guest@urgiles:~$</span> ${val}`;
+                content.appendChild(line);
+
+                if (commands[val]) {
+                    if (commands[val] === "CLEAR") {
+                        content.innerHTML = '<div class="text-blue-500 font-bold mb-1">GeorgeOS v1.0.4 (tty1) - Resetted.</div>';
+                    } else {
+                        const response = document.createElement('div');
+                        response.className = "text-slate-400 ml-4 mb-2 whitespace-pre-wrap";
+                        response.textContent = commands[val];
+                        content.appendChild(response);
+                    }
+                } else if (val.startsWith('color --')) {
+                    const color = val.split('--')[1];
+                    document.documentElement.style.setProperty('--accent', color === 'red' ? '#ef4444' : '#3b82f6');
+                } else if (val !== "") {
+                    const error = document.createElement('div');
+                    error.className = "text-red-500 ml-4";
+                    error.textContent = `zsh: command not found: ${val}`;
+                    content.appendChild(error);
+                }
+                input.value = '';
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+        });
+
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
