@@ -3,1153 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>George Urgiles | Software Engineer</title>
+  <title>George Urgiles | SWE</title>
+  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #07111f;
-      --bg-soft: #0d1c30;
-      --panel: rgba(10, 22, 39, 0.68);
-      --panel-strong: rgba(13, 28, 48, 0.84);
-      --line: rgba(162, 192, 255, 0.18);
-      --text: #f3f7ff;
-      --muted: #9bb1cf;
-      --accent: #69d2e7;
-      --accent-strong: #f4b860;
-      --success: #88f0b4;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 15% 20%, rgba(105, 210, 231, 0.22), transparent 26%),
-        radial-gradient(circle at 80% 18%, rgba(244, 184, 96, 0.18), transparent 24%),
-        radial-gradient(circle at 50% 85%, rgba(80, 119, 255, 0.18), transparent 30%),
-        linear-gradient(180deg, #06101d 0%, #081424 45%, #07111f 100%);
-      font-family: "Manrope", sans-serif;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    canvas#scene {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.9;
-    }
-
-    .noise,
-    .spotlight {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .noise {
-      opacity: 0.08;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-      background-size: 120px 120px;
-      mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
-    }
-
-    .spotlight {
-      background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.11), transparent 28%);
-      transition: background 140ms linear;
-    }
-
-    .shell {
-      position: relative;
-      z-index: 1;
-      width: min(1200px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 72px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 18px;
-      margin-bottom: 28px;
-      background: rgba(9, 19, 33, 0.56);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .brand strong,
-    .section-label,
-    .eyebrow,
-    .chip,
-    .stat-label,
-    .mini-label {
-      font-family: "Space Grotesk", sans-serif;
-    }
-
-    .brand strong {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    .brand span,
-    .nav-links a,
-    .meta,
-    .project-copy p,
-    .about-copy p,
-    .timeline p,
-    .contact-copy p {
-      color: var(--muted);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .nav-links a {
-      font-size: 0.95rem;
-      transition: color 180ms ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 28px;
-      align-items: stretch;
-      margin-bottom: 28px;
-    }
-
-    .panel {
-      position: relative;
-      overflow: hidden;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-      transform-style: preserve-3d;
-    }
-
-    .hero-copy {
-      padding: 42px;
-      min-height: 620px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .hero-copy::before,
-    .hero-visual::before,
-    .stat::before,
-    .project::before,
-    .contact::before {
-      content: "";
-      position: absolute;
-      inset: 1px;
-      border-radius: inherit;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), transparent 35%, transparent 70%, rgba(255, 255, 255, 0.03));
-      pointer-events: none;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 22px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      color: var(--accent);
-      background: rgba(105, 210, 231, 0.08);
-      border: 1px solid rgba(105, 210, 231, 0.18);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--accent);
-      box-shadow: 0 0 18px rgba(105, 210, 231, 0.8);
-    }
-
-    h1 {
-      max-width: 11ch;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: clamp(3.4rem, 8vw, 6.4rem);
-      line-height: 0.92;
-      letter-spacing: 0;
-      margin-bottom: 20px;
-    }
-
-    .lead {
-      max-width: 58ch;
-      font-size: 1.08rem;
-      line-height: 1.75;
-      color: #d5e3f8;
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 28px;
-    }
-
-    .button,
-    .button-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 50px;
-      padding: 0 18px;
-      border-radius: 14px;
-      font-weight: 700;
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-    }
-
-    .button {
-      background: linear-gradient(135deg, var(--accent) 0%, #6eb7ff 100%);
-      color: #04111c;
-      box-shadow: 0 14px 34px rgba(105, 210, 231, 0.26);
-    }
-
-    .button-secondary {
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--text);
-    }
-
-    .button:hover,
-    .button-secondary:hover {
-      transform: translateY(-2px);
-    }
-
-    .hero-foot {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 36px;
-    }
-
-    .mini-stat {
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .mini-stat strong {
-      display: block;
-      font-size: 1.6rem;
-      margin-bottom: 6px;
-    }
-
-    .mini-label {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-    }
-
-    .hero-visual {
-      padding: 28px;
-      min-height: 620px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
-        radial-gradient(circle at top right, rgba(244, 184, 96, 0.18), transparent 34%);
-    }
-
-    .stack {
-      position: relative;
-      width: min(420px, 100%);
-      aspect-ratio: 0.88;
-      transform-style: preserve-3d;
-      animation: hoverCard 8s ease-in-out infinite;
-    }
-
-    @keyframes hoverCard {
-      0%, 100% { transform: rotateX(6deg) rotateY(-10deg) translateY(0); }
-      50% { transform: rotateX(-2deg) rotateY(8deg) translateY(-10px); }
-    }
-
-    .orbit,
-    .profile-card,
-    .floating-card {
-      position: absolute;
-      border-radius: 24px;
-      transform-style: preserve-3d;
-    }
-
-    .orbit {
-      inset: 5%;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transform: translateZ(-60px) rotateX(74deg);
-      box-shadow: inset 0 0 60px rgba(105, 210, 231, 0.08);
-    }
-
-    .orbit::before,
-    .orbit::after {
-      content: "";
-      position: absolute;
-      inset: 10%;
-      border-radius: inherit;
-      border: 1px solid rgba(105, 210, 231, 0.16);
-    }
-
-    .orbit::after {
-      inset: 22%;
-      border-color: rgba(244, 184, 96, 0.18);
-    }
-
-    .profile-card {
-      inset: 10% 8% 18%;
-      overflow: hidden;
-      background: linear-gradient(180deg, rgba(7, 17, 31, 0.3), rgba(7, 17, 31, 0.92));
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.34);
-      transform: translateZ(28px);
-    }
-
-    .profile-card img {
-      width: 100%;
-      height: 68%;
-      object-fit: cover;
-      display: block;
-      filter: saturate(1.05) contrast(1.03);
-    }
-
-    .profile-copy {
-      padding: 18px 20px 20px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .profile-copy strong {
-      font-size: 1.35rem;
-    }
-
-    .meta-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 32px;
-      padding: 0 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #d8e7fb;
-      font-size: 0.77rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .floating-card {
-      padding: 14px 16px;
-      background: rgba(7, 17, 31, 0.82);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
-    }
-
-    .floating-card strong {
-      display: block;
-      font-size: 1.15rem;
-      margin-bottom: 4px;
-    }
-
-    .floating-card span {
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.5;
-    }
-
-    .card-a {
-      top: 4%;
-      right: 0;
-      width: 180px;
-      transform: translateZ(70px) rotateY(-14deg);
-    }
-
-    .card-b {
-      bottom: 8%;
-      left: -4%;
-      width: 220px;
-      transform: translateZ(52px) rotateY(16deg);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .stat {
-      grid-column: span 3;
-      padding: 22px;
-      min-height: 168px;
-    }
-
-    .stat strong {
-      display: block;
-      margin: 28px 0 8px;
-      font-size: clamp(2rem, 4vw, 2.9rem);
-      line-height: 1;
-    }
-
-    .section {
-      margin-top: 22px;
-      padding: 30px;
-    }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 18px;
-      margin-bottom: 24px;
-    }
-
-    .section-label {
-      display: inline-block;
-      color: var(--accent);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      font-family: "Space Grotesk", sans-serif;
-      font-size: clamp(2rem, 4vw, 3.1rem);
-      line-height: 1;
-    }
-
-    .section-copy {
-      max-width: 44ch;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 22px;
-    }
-
-    .about-copy,
-    .timeline,
-    .contact {
-      padding: 24px;
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .about-copy p + p,
-    .timeline-item + .timeline-item {
-      margin-top: 18px;
-    }
-
-    .timeline-item {
-      padding-top: 18px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .timeline-item:first-child {
-      padding-top: 0;
-      border-top: 0;
-    }
-
-    .timeline-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 10px;
-    }
-
-    .timeline h3,
-    .project-copy h3,
-    .contact-copy h3 {
-      font-size: 1.2rem;
-    }
-
-    .skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .project {
-      grid-column: span 6;
-      padding: 22px;
-      min-height: 320px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 46%),
-        rgba(255, 255, 255, 0.02);
-      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
-    }
-
-    .project:hover,
-    .stat:hover,
-    .contact:hover,
-    .about-copy:hover,
-    .timeline:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255, 255, 255, 0.16);
-      box-shadow: 0 28px 64px rgba(0, 0, 0, 0.28);
-    }
-
-    .project-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .project-code {
-      color: var(--accent-strong);
-      font-size: 0.82rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .project-copy p {
-      margin-top: 12px;
-      line-height: 1.7;
-    }
-
-    .project-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .project-link {
-      align-self: flex-start;
-      margin-top: 24px;
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .project-large {
-      grid-column: span 8;
-    }
-
-    .project-small {
-      grid-column: span 4;
-    }
-
-    .contact {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 18px;
-      align-items: stretch;
-      margin-top: 22px;
-    }
-
-    .contact-card {
-      padding: 26px;
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .contact-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .availability {
-      display: grid;
-      gap: 14px;
-    }
-
-    .availability-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      margin-top: 22px;
-      padding: 18px 4px 0;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 700ms ease, transform 700ms ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 1080px) {
-      .hero,
-      .about-grid,
-      .contact {
-        grid-template-columns: 1fr;
-      }
-
-      .stat {
-        grid-column: span 6;
-      }
-
-      .project-large,
-      .project,
-      .project-small {
-        grid-column: span 12;
-      }
-
-      .hero-copy,
-      .hero-visual {
-        min-height: auto;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .shell {
-        width: min(100% - 20px, 1200px);
-        padding-top: 14px;
-      }
-
-      .topbar,
-      .section,
-      .hero-copy,
-      .hero-visual {
-        padding: 20px;
-      }
-
-      .nav-links {
-        gap: 12px;
-      }
-
-      .hero-foot,
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stat {
-        grid-column: span 12;
-        min-height: 150px;
-      }
-
-      .stack {
-        width: min(360px, 100%);
-      }
-
-      .card-a,
-      .card-b {
-        position: relative;
-        top: auto;
-        right: auto;
-        bottom: auto;
-        left: auto;
-        width: 100%;
-        margin-top: 12px;
-        transform: none;
-      }
-
-      .profile-card {
-        inset: 0;
-        position: relative;
-      }
-
-      .orbit {
-        display: none;
-      }
-
-      .footer,
-      .section-head,
-      .timeline-top,
-      .project-top {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <canvas id="scene"></canvas>
-  <div class="noise"></div>
-  <div class="spotlight"></div>
+  <canvas id="bg-canvas"></canvas>
 
-  <main class="shell">
-    <nav class="topbar reveal">
-      <div class="brand">
-        <strong>George Urgiles</strong>
-        <span>Software Engineer • AI Systems • Product-minded builder</span>
-      </div>
+  <div class="content">
+    <nav class="glass-panel">
+      <div class="brand">George U.</div>
       <div class="nav-links">
         <a href="#about">About</a>
-        <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#stack">Stack</a>
         <a href="#contact">Contact</a>
       </div>
     </nav>
 
-    <section class="hero">
-      <div class="panel hero-copy reveal">
-        <div>
-          <div class="eyebrow">Available for internships and technical collaborations</div>
-          <h1>Building ambitious software with polish, systems thinking, and taste.</h1>
-          <p class="lead">
-            I am a Computer Science student at the University of San Francisco focused on AI, applied machine learning, and full-stack engineering. My work sits between product execution and technical depth: legal-tech automation, secure desktop tools, real-time interfaces, and performance-minded open source.
-          </p>
-          <div class="hero-actions">
-            <a class="button" href="#projects">View selected work</a>
-            <a class="button-secondary" href="#contact">See availability</a>
-          </div>
-        </div>
-
-        <div class="hero-foot">
-          <div class="mini-stat">
-            <strong>2026</strong>
-            <span class="mini-label">B.S. Computer Science</span>
-          </div>
-          <div class="mini-stat">
-            <strong>25M+</strong>
-            <span class="mini-label">Open-source project reach</span>
-          </div>
-          <div class="mini-stat">
-            <strong>AI + UX</strong>
-            <span class="mini-label">Specialization blend</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel hero-visual reveal tilt">
-        <div class="stack">
-          <div class="orbit"></div>
-          <article class="profile-card">
-            <img src="usfca.jpeg" alt="George Urgiles portrait">
-            <div class="profile-copy">
-              <strong>George Urgiles</strong>
-              <span class="meta">San Francisco, CA • Systems, AI, product engineering</span>
-              <div class="meta-row">
-                <span class="chip">Python</span>
-                <span class="chip">TypeScript</span>
-                <span class="chip">Java</span>
-                <span class="chip">ML Systems</span>
-              </div>
-            </div>
-          </article>
-          <article class="floating-card card-a">
-            <strong>Document AI</strong>
-            <span>Production-style pipelines for parsing, classification, and semantic analysis.</span>
-          </article>
-          <article class="floating-card card-b">
-            <strong>Professional edge</strong>
-            <span>Strong visual judgment, product sense, and disciplined engineering execution.</span>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="grid">
-      <article class="panel stat reveal tilt">
-        <span class="stat-label">Experience Surface</span>
-        <strong>AI</strong>
-        <p class="meta">LLM workflows, prompt design, extraction pipelines, and model-assisted product features.</p>
-      </article>
-      <article class="panel stat reveal tilt">
-        <span class="stat-label">Engineering Style</span>
-        <strong>Full-Stack</strong>
-        <p class="meta">Strong across interface systems, backend logic, and applied systems programming.</p>
-      </article>
-      <article class="panel stat reveal tilt">
-        <span class="stat-label">Open Source</span>
-        <strong>25M+</strong>
-        <p class="meta">Contributed to performance-sensitive software used at meaningful public scale.</p>
-      </article>
-      <article class="panel stat reveal tilt">
-        <span class="stat-label">Focus Areas</span>
-        <strong>Secure + Fast</strong>
-        <p class="meta">Careful about reliability, developer ergonomics, and user-facing clarity.</p>
-      </article>
-    </section>
-
-    <section class="panel section reveal" id="about">
-      <div class="section-head">
-        <div>
-          <span class="section-label">Profile</span>
-          <h2>Intentional work, not template work.</h2>
-        </div>
-        <p class="section-copy">
-          I like software that looks sharp, behaves predictably, and carries real technical weight underneath. That applies equally to a production tool, a portfolio, or a systems project.
-        </p>
-      </div>
-
-      <div class="about-grid">
-        <article class="about-copy tilt">
-          <p>
-            My background combines academic training in computer science with hands-on execution across AI tooling, secure applications, and product-facing interfaces. I gravitate toward projects where implementation quality matters as much as the idea itself.
-          </p>
-          <p>
-            Current interests include applied machine learning, automation systems, performance-sensitive software, and interface design that feels considered instead of generic.
-          </p>
-          <div class="skills">
-            <span class="chip">Artificial Intelligence</span>
-            <span class="chip">Machine Learning</span>
-            <span class="chip">Systems Programming</span>
-            <span class="chip">Product Design</span>
-            <span class="chip">Security</span>
-            <span class="chip">Data Pipelines</span>
-          </div>
-        </article>
-
-        <article class="timeline tilt" id="experience">
-          <div class="timeline-item">
-            <div class="timeline-top">
-              <div>
-                <h3>Systems Engineering Intern</h3>
-                <p>Keller Law Group</p>
-              </div>
-              <span class="chip">2023 - 2024</span>
-            </div>
-            <p>Worked on document parsing engines and GPT-4-driven automation flows, with an emphasis on throughput, extraction quality, and practical legal-tech workflows.</p>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-top">
-              <div>
-                <h3>B.S. in Computer Science</h3>
-                <p>University of San Francisco</p>
-              </div>
-              <span class="chip">Expected 2026</span>
-            </div>
-            <p>Specializing in artificial intelligence and machine learning while building a broader foundation in algorithms, systems, and software engineering.</p>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-top">
-              <div>
-                <h3>Build Pattern</h3>
-                <p>Independent and collaborative projects</p>
-              </div>
-              <span class="chip">Ongoing</span>
-            </div>
-            <p>Typically drawn to products that need both technical credibility and refined user experience, especially where automation or real-time feedback creates leverage.</p>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel section reveal" id="projects">
-      <div class="section-head">
-        <div>
-          <span class="section-label">Selected Work</span>
-          <h2>Projects with technical range.</h2>
-        </div>
-        <p class="section-copy">
-          The mix here is deliberate: interface work, systems work, automation work, and public-scale open source. Together they show the kind of engineer I am.
-        </p>
-      </div>
-
-      <div class="projects">
-        <article class="panel project project-large tilt">
-          <div>
-            <div class="project-top">
-              <div class="project-copy">
-                <span class="project-code">Open Source / Performance</span>
-                <h3>Enhanced Block Entities</h3>
-                <p>Contributed to a large-scale Minecraft optimization mod focused on reducing rendering overhead through efficient rendering logic and performance-minded engineering.</p>
-              </div>
-              <span class="chip">25M+ reach</span>
-            </div>
-            <div class="project-meta">
-              <span class="chip">Java</span>
-              <span class="chip">Rendering</span>
-              <span class="chip">Optimization</span>
-              <span class="chip">OpenGL</span>
-            </div>
-          </div>
-          <a class="project-link" href="https://github.com/FoundationGames/EnhancedBlockEntities" target="_blank" rel="noreferrer">Open project</a>
-        </article>
-
-        <article class="panel project project-small tilt">
-          <div>
-            <span class="project-code">Desktop Tooling</span>
-            <h3>Spotify Desk Thing</h3>
-            <p>Python-based hardware interface for real-time playback telemetry on a dedicated desk display.</p>
-            <div class="project-meta">
-              <span class="chip">Python</span>
-              <span class="chip">Hardware I/O</span>
-              <span class="chip">Realtime</span>
-            </div>
-          </div>
-          <a class="project-link" href="https://github.com/URGG/SPOTIFY_DESK_THING" target="_blank" rel="noreferrer">Open project</a>
-        </article>
-
-        <article class="panel project project-small tilt">
-          <div>
-            <span class="project-code">Mobile / Discovery</span>
-            <h3>LA-PULSE</h3>
-            <p>Event discovery concept for Los Angeles built around live information, cleaner search, and a sharper city-first experience.</p>
-            <div class="project-meta">
-              <span class="chip">TypeScript</span>
-              <span class="chip">iOS</span>
-              <span class="chip">Product Design</span>
-            </div>
-          </div>
-          <a class="project-link" href="https://github.com/URGG/LA-PULSE" target="_blank" rel="noreferrer">Open project</a>
-        </article>
-
-        <article class="panel project project-large tilt">
-          <div>
-            <div class="project-top">
-              <div class="project-copy">
-                <span class="project-code">Systems / Shell</span>
-                <h3>Unix Shell</h3>
-                <p>Built a POSIX-style shell in Java with command execution, piping, job control, and signal handling. Good example of low-level problem solving and behavior-focused implementation.</p>
-              </div>
-              <span class="chip">Systems</span>
-            </div>
-            <div class="project-meta">
-              <span class="chip">Java</span>
-              <span class="chip">Processes</span>
-              <span class="chip">Signals</span>
-              <span class="chip">CLI</span>
-            </div>
-          </div>
-          <a class="project-link" href="https://github.com/URGG/Shell" target="_blank" rel="noreferrer">Open project</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel contact reveal tilt" id="contact">
-      <div class="contact-card contact-copy">
-        <span class="section-label">Next Move</span>
-        <h3>Looking for work that values technical judgment and finish quality.</h3>
+    <main>
+      <section id="about" class="hero glass-panel">
+        <h1>Building ambitious software with polish, systems thinking, and taste.</h1>
         <p>
-          I am most useful on engineering teams that want someone who can ship interfaces, think clearly about systems, and handle AI-enabled product work without treating it like a gimmick.
+          I'm a CS student at USF, based in LA/SF. I like building cool things - from low-level Unix shells in Java to custom Minecraft mods and hardware hacks. I'm all about writing solid code and actually shipping things that work, without overcomplicating the stack.
         </p>
-        <div class="contact-actions">
-          <a class="button" href="https://github.com/URGG" target="_blank" rel="noreferrer">GitHub</a>
-          <a class="button-secondary" href="#projects">Selected work</a>
-          <a class="button-secondary" href="#about">Profile</a>
+        <div class="actions">
+          <a class="btn primary" href="https://github.com/URGG" target="_blank">View GitHub</a>
+          <a class="btn secondary" href="#projects">My Work</a>
+        </div>
+      </section>
+
+      <h2 class="section-title">Selected Projects</h2>
+      <div id="projects" class="project-grid">
+        <div class="project-card glass-panel">
+          <h3>Internship Tracker</h3>
+          <p>A full-stack tracker for internship applications with status workflow, deadlines, and follow-up notes so outreach stays organized during recruiting season.</p>
+          <div class="tags"><span class="tag">JavaScript</span><span class="tag">Full Stack</span><span class="tag">Productivity</span></div>
+          <a class="project-link" href="https://github.com/URGG/Internship-tracker" target="_blank" rel="noreferrer">View Repository</a>
+        </div>
+        <div class="project-card glass-panel">
+          <h3>Kernel Workspace (RAG AI)</h3>
+          <p>A local-first AI workspace and retrieval system that combines a React UI with a Python/FastAPI backend for private, offline-capable document Q&amp;A workflows.</p>
+          <div class="tags"><span class="tag">React</span><span class="tag">FastAPI</span><span class="tag">RAG</span></div>
+          <a class="project-link" href="https://github.com/URGG/Rag-ai" target="_blank" rel="noreferrer">View Repository</a>
+        </div>
+        <div class="project-card glass-panel">
+          <h3>God Weapons MC Mod</h3>
+          <p>A Minecraft 1.21.4 Java mod with intentionally overpowered weapons and abilities, including custom combat effects and tuned gameplay balancing for dramatic fights.</p>
+          <div class="tags"><span class="tag">Java</span><span class="tag">Minecraft</span><span class="tag">Game Dev</span></div>
+          <a class="project-link" href="https://github.com/URGG/God-Weapons-MCmod" target="_blank" rel="noreferrer">View Repository</a>
+        </div>
+        <div class="project-card glass-panel">
+          <h3>Spotify Desk Display</h3>
+          <p>A desk display project showing live Spotify track data and album art on an external screen, built for always-on visual playback telemetry.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">API</span><span class="tag">Hardware</span></div>
+          <a class="project-link" href="https://github.com/URGG/SPOTIFY_DESK_THING" target="_blank" rel="noreferrer">View Repository</a>
+        </div>
+        <div class="project-card glass-panel">
+          <h3>CHIP-8 Emulator</h3>
+          <p>A low-level emulator project in C focused on CPU instructions, memory handling, and graphics timing to recreate classic CHIP-8 behavior.</p>
+          <div class="tags"><span class="tag">C</span><span class="tag">Emulator</span><span class="tag">Systems</span></div>
+          <a class="project-link" href="https://github.com/URGG/Chip8_emulator" target="_blank" rel="noreferrer">View Repository</a>
+        </div>
+        <div class="project-card glass-panel">
+          <h3>LA-PULSE</h3>
+          <p>A city-focused event discovery app concept for Los Angeles, with emphasis on fast browsing, practical filters, and clean mobile UX.</p>
+          <div class="tags"><span class="tag">TypeScript</span><span class="tag">Mobile</span><span class="tag">Product</span></div>
+          <a class="project-link" href="https://github.com/URGG/LA-PULSE" target="_blank" rel="noreferrer">View Repository</a>
         </div>
       </div>
 
-      <div class="contact-card availability">
-        <div class="availability-row">
-          <span class="meta">Current base</span>
-          <strong>San Francisco</strong>
+      <section id="experience" class="info-section glass-panel">
+        <h2 class="section-title">Experience</h2>
+        <div class="info-grid">
+          <article class="info-item">
+            <h3>Systems + Product Build Style</h3>
+            <p>I prefer shipping end-to-end features with clear UX and reliable internals instead of isolated prototypes.</p>
+          </article>
+          <article class="info-item">
+            <h3>AI + Full-Stack Projects</h3>
+            <p>Recent work focuses on practical AI workflows, data flow orchestration, and frontends people can actually use daily.</p>
+          </article>
+          <article class="info-item">
+            <h3>Hands-On Engineering</h3>
+            <p>From C emulation and Java mods to TypeScript product apps, I like moving between low-level detail and product polish.</p>
+          </article>
         </div>
-        <div class="availability-row">
-          <span class="meta">Focus</span>
-          <strong>AI, Full-Stack, Systems</strong>
+      </section>
+
+      <section id="stack" class="info-section glass-panel">
+        <h2 class="section-title">Stack &amp; Focus</h2>
+        <div class="stack-grid">
+          <div class="stack-item">
+            <h3>Languages</h3>
+            <p>JavaScript, TypeScript, Python, Java, C</p>
+          </div>
+          <div class="stack-item">
+            <h3>Frameworks</h3>
+            <p>React, FastAPI, Node.js ecosystem tools</p>
+          </div>
+          <div class="stack-item">
+            <h3>Domains</h3>
+            <p>RAG systems, productivity tooling, game/mod development, systems projects</p>
+          </div>
+          <div class="stack-item">
+            <h3>Current Goal</h3>
+            <p>Software engineering internships where I can ship product-facing features with strong technical quality.</p>
+          </div>
         </div>
-        <div class="availability-row">
-          <span class="meta">Education</span>
-          <strong>USF Computer Science</strong>
+      </section>
+
+      <section id="contact" class="contact glass-panel">
+        <h2 class="section-title">Contact</h2>
+        <p>Open to software engineering internships and technical collaborations.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://github.com/URGG" target="_blank" rel="noreferrer">GitHub Profile</a>
+          <a class="btn secondary" href="https://github.com/URGG?tab=repositories" target="_blank" rel="noreferrer">All Repositories</a>
         </div>
-        <div class="availability-row">
-          <span class="meta">Availability</span>
-          <strong>Internships / collaborations</strong>
-        </div>
-      </div>
-    </section>
+      </section>
+    </main>
+  </div>
 
-    <footer class="footer reveal">
-      <span>Designed and built as a single-page portfolio with animated depth, canvas atmosphere, and layered glass surfaces.</span>
-      <span>George Urgiles</span>
-    </footer>
-  </main>
-
-  <script>
-    const scene = document.getElementById("scene");
-    const ctx = scene.getContext("2d");
-    const particles = [];
-    const pointer = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.35 };
-    const spotlight = document.querySelector(".spotlight");
-
-    function resizeScene() {
-      scene.width = window.innerWidth;
-      scene.height = window.innerHeight;
-    }
-
-    function seedParticles() {
-      particles.length = 0;
-      const total = Math.min(80, Math.floor(window.innerWidth / 18));
-      for (let i = 0; i < total; i += 1) {
-        particles.push({
-          x: Math.random() * scene.width,
-          y: Math.random() * scene.height,
-          z: Math.random() * 0.9 + 0.1,
-          r: Math.random() * 2.2 + 0.6,
-          vx: (Math.random() - 0.5) * 0.16,
-          vy: (Math.random() - 0.5) * 0.16
-        });
-      }
-    }
-
-    function drawGrid() {
-      const spacing = 80;
-      ctx.save();
-      ctx.strokeStyle = "rgba(138, 182, 255, 0.08)";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      for (let x = -spacing; x < scene.width + spacing; x += spacing) {
-        ctx.moveTo(x + (pointer.x - scene.width / 2) * 0.02, 0);
-        ctx.lineTo(x - 60 + (pointer.x - scene.width / 2) * 0.04, scene.height);
-      }
-      for (let y = 0; y < scene.height + spacing; y += spacing) {
-        ctx.moveTo(0, y + (pointer.y - scene.height / 2) * 0.015);
-        ctx.lineTo(scene.width, y - 20 + (pointer.y - scene.height / 2) * 0.03);
-      }
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    function animateScene() {
-      ctx.clearRect(0, 0, scene.width, scene.height);
-      drawGrid();
-
-      for (const p of particles) {
-        p.x += p.vx * p.z;
-        p.y += p.vy * p.z;
-
-        if (p.x < -10) p.x = scene.width + 10;
-        if (p.x > scene.width + 10) p.x = -10;
-        if (p.y < -10) p.y = scene.height + 10;
-        if (p.y > scene.height + 10) p.y = -10;
-
-        const dx = (pointer.x - p.x) * 0.0009;
-        const dy = (pointer.y - p.y) * 0.0009;
-        p.vx += dx;
-        p.vy += dy;
-        p.vx *= 0.985;
-        p.vy *= 0.985;
-
-        ctx.beginPath();
-        ctx.fillStyle = p.z > 0.55 ? "rgba(105, 210, 231, 0.85)" : "rgba(244, 184, 96, 0.75)";
-        ctx.arc(p.x, p.y, p.r * p.z, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      requestAnimationFrame(animateScene);
-    }
-
-    function updateSpotlight(x, y) {
-      const mx = (x / window.innerWidth) * 100;
-      const my = (y / window.innerHeight) * 100;
-      spotlight.style.setProperty("--mx", mx + "%");
-      spotlight.style.setProperty("--my", my + "%");
-    }
-
-    window.addEventListener("resize", () => {
-      resizeScene();
-      seedParticles();
-    });
-
-    window.addEventListener("pointermove", (event) => {
-      pointer.x = event.clientX;
-      pointer.y = event.clientY;
-      updateSpotlight(event.clientX, event.clientY);
-    });
-
-    resizeScene();
-    seedParticles();
-    animateScene();
-    updateSpotlight(pointer.x, pointer.y);
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    }, { threshold: 0.18 });
-
-    document.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
-
-    document.querySelectorAll(".tilt").forEach((card) => {
-      card.addEventListener("pointermove", (event) => {
-        const rect = card.getBoundingClientRect();
-        const px = (event.clientX - rect.left) / rect.width;
-        const py = (event.clientY - rect.top) / rect.height;
-        const rx = (0.5 - py) * 7;
-        const ry = (px - 0.5) * 9;
-        card.style.transform = "perspective(1200px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) translateY(-4px)";
-      });
-
-      card.addEventListener("pointerleave", () => {
-        card.style.transform = "";
-      });
-    });
-  </script>
+  <script type="module" src="scene.js"></script>
 </body>
 </html>
