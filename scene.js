@@ -95,13 +95,13 @@ function resize() {
   state.noiseLayer = createNoiseLayer(width, height);
   rebuildAtmosphere(width, height);
 
-  const windowW = width * 0.48;
-  const windowH = height * 0.36;
+  const windowW = width * 0.56;
+  const windowH = height * 0.42;
   const windowX = (width - windowW) * 0.5;
-  const windowY = height * 0.12;
+  const windowY = height * 0.1;
 
   state.layout = {
-    wallY: height * 0.63,
+    wallY: height * 0.68,
     windowX,
     windowY,
     windowW,
@@ -119,23 +119,52 @@ function drawWallAndFloor() {
   const { wallY } = state.layout;
 
   const wallGrad = ctx.createLinearGradient(0, 0, 0, wallY);
-  wallGrad.addColorStop(0, "#ac7f5c");
-  wallGrad.addColorStop(0.57, "#93684d");
-  wallGrad.addColorStop(1, "#725241");
+  wallGrad.addColorStop(0, "#1a2445");
+  wallGrad.addColorStop(0.42, "#26325d");
+  wallGrad.addColorStop(0.72, "#382944");
+  wallGrad.addColorStop(1, "#251d32");
   ctx.fillStyle = wallGrad;
   ctx.fillRect(0, 0, width, wallY);
 
+  const warmLight = ctx.createRadialGradient(
+    width * 0.18,
+    height * 0.6,
+    10,
+    width * 0.18,
+    height * 0.6,
+    width * 0.46
+  );
+  warmLight.addColorStop(0, "rgba(255, 187, 86, 0.34)");
+  warmLight.addColorStop(0.5, "rgba(226, 92, 62, 0.12)");
+  warmLight.addColorStop(1, "rgba(255, 187, 86, 0)");
+  ctx.fillStyle = warmLight;
+  ctx.fillRect(0, 0, width, wallY);
+
+  const coolBalance = ctx.createRadialGradient(
+    width * 0.82,
+    height * 0.22,
+    10,
+    width * 0.82,
+    height * 0.22,
+    width * 0.42
+  );
+  coolBalance.addColorStop(0, "rgba(70, 177, 216, 0.26)");
+  coolBalance.addColorStop(1, "rgba(70, 177, 216, 0)");
+  ctx.fillStyle = coolBalance;
+  ctx.fillRect(0, 0, width, wallY);
+
   const floorGrad = ctx.createLinearGradient(0, wallY, 0, height);
-  floorGrad.addColorStop(0, "#53392d");
-  floorGrad.addColorStop(1, "#2e211b");
+  floorGrad.addColorStop(0, "#493447");
+  floorGrad.addColorStop(0.42, "#251a2c");
+  floorGrad.addColorStop(1, "#11111d");
   ctx.fillStyle = floorGrad;
   ctx.fillRect(0, wallY, width, height - wallY);
 
-  fillRoundedRect(0, wallY - 7, width, 11, 0, "rgba(77, 52, 39, 0.85)");
+  fillRoundedRect(0, wallY - 8, width, 14, 0, "rgba(12, 15, 31, 0.82)");
 
   for (let i = 0; i < 13; i += 1) {
     const y = wallY + 14 + i * 20;
-    ctx.strokeStyle = i % 2 ? "rgba(45, 30, 23, 0.32)" : "rgba(87, 59, 46, 0.24)";
+    ctx.strokeStyle = i % 2 ? "rgba(15, 16, 29, 0.35)" : "rgba(92, 72, 101, 0.22)";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(0, y);
@@ -144,15 +173,15 @@ function drawWallAndFloor() {
   }
 
   ctx.save();
-  ctx.globalAlpha = 0.1;
+  ctx.globalAlpha = 0.13;
   ctx.drawImage(state.noiseLayer, 0, 0, width, height);
   ctx.restore();
 
   const cornerShade = ctx.createLinearGradient(0, 0, width, 0);
-  cornerShade.addColorStop(0, "rgba(0,0,0,0.12)");
+  cornerShade.addColorStop(0, "rgba(0,0,0,0.22)");
   cornerShade.addColorStop(0.08, "rgba(0,0,0,0)");
   cornerShade.addColorStop(0.92, "rgba(0,0,0,0)");
-  cornerShade.addColorStop(1, "rgba(0,0,0,0.12)");
+  cornerShade.addColorStop(1, "rgba(0,0,0,0.22)");
   ctx.fillStyle = cornerShade;
   ctx.fillRect(0, 0, width, height);
 }
@@ -162,24 +191,63 @@ function drawWorkspaceDecor(time) {
   const { wallY } = state.layout;
 
   const shelfY = wallY * 0.42;
-  fillRoundedRect(width * 0.11, shelfY, width * 0.2, 12, 4, "#5a3a29");
+  fillRoundedRect(width * 0.09, shelfY, width * 0.22, 14, 4, "#1b1630");
+  fillRoundedRect(width * 0.09, shelfY - 2, width * 0.22, 3, 2, "rgba(255, 188, 84, 0.35)");
 
   for (let i = 0; i < 8; i += 1) {
     const bx = width * 0.12 + i * (width * 0.021);
     const h = 26 + (i % 3) * 12;
-    fillRoundedRect(bx, shelfY - h, width * 0.016, h, 2, i % 2 ? "#8f6f5c" : "#b68b73");
+    const bookColors = ["#ef6f5e", "#f5b84d", "#55b8c8", "#7f7bd8"];
+    fillRoundedRect(bx, shelfY - h, width * 0.016, h, 2, bookColors[i % bookColors.length]);
+    fillRoundedRect(bx + 3, shelfY - h + 5, width * 0.006, h - 10, 1, "rgba(255, 255, 255, 0.18)");
   }
 
-  fillRoundedRect(width * 0.19, shelfY - 60, width * 0.035, 36, 6, "#835740");
-  fillRoundedRect(width * 0.19 - 2, shelfY - 62, width * 0.039, 6, 3, "#9c7256");
-  ctx.strokeStyle = "#2f6941";
+  fillRoundedRect(width * 0.19, shelfY - 60, width * 0.035, 36, 6, "#dd7751");
+  fillRoundedRect(width * 0.19 - 2, shelfY - 62, width * 0.039, 6, 3, "#ffad70");
+  ctx.strokeStyle = "#4bc07a";
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(width * 0.206, shelfY - 60);
   ctx.quadraticCurveTo(width * 0.198, shelfY - 82, width * 0.214, shelfY - 104);
   ctx.stroke();
-  fillRoundedRect(width * 0.196, shelfY - 108, 8, 20, 4, "#4f8f58");
-  fillRoundedRect(width * 0.21, shelfY - 102, 8, 16, 4, "#5ea063");
+  fillRoundedRect(width * 0.196, shelfY - 108, 8, 20, 4, "#62d58b");
+  fillRoundedRect(width * 0.21, shelfY - 102, 8, 16, 4, "#76e099");
+
+  fillRoundedRect(width * 0.075, wallY * 0.14, width * 0.13, wallY * 0.22, 6, "#10182d");
+  fillRoundedRect(width * 0.083, wallY * 0.155, width * 0.114, wallY * 0.19, 4, "#d35d72");
+  fillRoundedRect(width * 0.09, wallY * 0.17, width * 0.1, wallY * 0.06, 4, "#f4b45c");
+  fillRoundedRect(width * 0.09, wallY * 0.245, width * 0.075, wallY * 0.038, 4, "#4cb4d8");
+
+  fillRoundedRect(width * 0.785, wallY * 0.14, width * 0.13, wallY * 0.22, 6, "#111a30");
+  fillRoundedRect(width * 0.795, wallY * 0.155, width * 0.11, wallY * 0.19, 4, "#233f68");
+  ctx.save();
+  ctx.shadowColor = "rgba(95, 222, 235, 0.75)";
+  ctx.shadowBlur = 14;
+  ctx.strokeStyle = "#7ce7ed";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(width * 0.812, wallY * 0.255);
+  ctx.lineTo(width * 0.84, wallY * 0.2);
+  ctx.lineTo(width * 0.875, wallY * 0.255);
+  ctx.lineTo(width * 0.895, wallY * 0.215);
+  ctx.stroke();
+  ctx.restore();
+
+  for (let i = 0; i < 9; i += 1) {
+    const lx = width * 0.32 + i * width * 0.045;
+    const ly = wallY * 0.16 + Math.sin(i * 0.85) * 12;
+    ctx.strokeStyle = "rgba(21, 18, 34, 0.68)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(lx - width * 0.023, ly - 8);
+    ctx.lineTo(lx, ly);
+    ctx.stroke();
+    ctx.save();
+    ctx.shadowColor = i % 3 === 0 ? "#ffd36e" : i % 3 === 1 ? "#6ee8ff" : "#ff7b78";
+    ctx.shadowBlur = 12;
+    fillRoundedRect(lx - 3, ly, 7, 10, 4, ctx.shadowColor);
+    ctx.restore();
+  }
 
   const hangX = width * 0.8;
   const hangY = wallY * 0.12;
@@ -189,19 +257,19 @@ function drawWorkspaceDecor(time) {
   ctx.moveTo(hangX, hangY);
   ctx.lineTo(hangX, hangY + 44);
   ctx.stroke();
-  fillRoundedRect(hangX - 26, hangY + 44, 52, 20, 5, "#855a41");
-  fillRoundedRect(hangX - 30, hangY + 40, 60, 6, 3, "#9b7357");
-  fillRoundedRect(hangX - 22, hangY + 26, 10, 28, 5, "#4f8653");
-  fillRoundedRect(hangX - 8, hangY + 28, 10, 24, 5, "#5a955f");
-  fillRoundedRect(hangX + 8, hangY + 24, 10, 30, 5, "#4b824f");
+  fillRoundedRect(hangX - 26, hangY + 44, 52, 20, 5, "#d46b4f");
+  fillRoundedRect(hangX - 30, hangY + 40, 60, 6, 3, "#ffad78");
+  fillRoundedRect(hangX - 22, hangY + 26, 10, 28, 5, "#4dc47d");
+  fillRoundedRect(hangX - 8, hangY + 28, 10, 24, 5, "#65d590");
+  fillRoundedRect(hangX + 8, hangY + 24, 10, 30, 5, "#43b870");
 
   const floorPlantX = width * 0.86;
   const floorPlantY = wallY + 22;
-  fillRoundedRect(floorPlantX, floorPlantY, 46, 34, 5, "#7d543e");
-  fillRoundedRect(floorPlantX - 3, floorPlantY - 3, 52, 8, 4, "#93664c");
+  fillRoundedRect(floorPlantX, floorPlantY, 46, 34, 5, "#d36f53");
+  fillRoundedRect(floorPlantX - 3, floorPlantY - 3, 52, 8, 4, "#ffad78");
   for (let i = 0; i < 7; i += 1) {
     const sway = Math.sin(time * 1.2 + i) * 4;
-    ctx.strokeStyle = i % 2 ? "#3f7a47" : "#4f9158";
+    ctx.strokeStyle = i % 2 ? "#3ec276" : "#5ed890";
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(floorPlantX + 22, floorPlantY);
@@ -256,102 +324,135 @@ function drawWindowOutside(time) {
   const { windowX: x, windowY: y, windowW: w, windowH: h } = state.layout;
 
   const skyGrad = ctx.createLinearGradient(x, y, x, y + h);
-  skyGrad.addColorStop(0, "#95bdcb");
-  skyGrad.addColorStop(0.62, "#71908c");
-  skyGrad.addColorStop(1, "#566f63");
+  skyGrad.addColorStop(0, "#07122d");
+  skyGrad.addColorStop(0.45, "#17224e");
+  skyGrad.addColorStop(0.78, "#35264d");
+  skyGrad.addColorStop(1, "#1b2038");
   ctx.fillStyle = skyGrad;
   ctx.fillRect(x, y, w, h);
 
-  const mountainGrad = ctx.createLinearGradient(x, y + h * 0.32, x, y + h * 0.67);
-  mountainGrad.addColorStop(0, "rgba(77, 103, 98, 0.7)");
-  mountainGrad.addColorStop(1, "rgba(62, 85, 76, 0.85)");
-  ctx.fillStyle = mountainGrad;
+  const moonGlow = ctx.createRadialGradient(
+    x + w * 0.76,
+    y + h * 0.18,
+    8,
+    x + w * 0.76,
+    y + h * 0.18,
+    w * 0.28
+  );
+  moonGlow.addColorStop(0, "rgba(233, 244, 255, 0.52)");
+  moonGlow.addColorStop(0.18, "rgba(153, 206, 255, 0.24)");
+  moonGlow.addColorStop(1, "rgba(153, 206, 255, 0)");
+  ctx.fillStyle = moonGlow;
+  ctx.fillRect(x, y, w, h);
+
+  ctx.save();
+  ctx.shadowColor = "rgba(193, 224, 255, 0.8)";
+  ctx.shadowBlur = 16;
+  ctx.fillStyle = "#dcecff";
   ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.58);
-  ctx.lineTo(x + w * 0.18, y + h * 0.44);
-  ctx.lineTo(x + w * 0.36, y + h * 0.55);
-  ctx.lineTo(x + w * 0.56, y + h * 0.42);
-  ctx.lineTo(x + w * 0.72, y + h * 0.57);
-  ctx.lineTo(x + w, y + h * 0.48);
-  ctx.lineTo(x + w, y + h * 0.67);
-  ctx.lineTo(x, y + h * 0.67);
-  ctx.closePath();
+  ctx.arc(x + w * 0.76, y + h * 0.18, 13, 0, Math.PI * 2);
   ctx.fill();
+  ctx.restore();
 
-  for (let i = 0; i < 7; i += 1) {
-    const hx = x + 12 + i * ((w - 24) / 7);
-    const hh = 15 + (i % 3) * 6;
-    fillRoundedRect(hx, y + h * 0.63 - hh, 24, hh, 2, "rgba(70, 83, 87, 0.65)");
-    fillRoundedRect(hx + 4, y + h * 0.63 - hh - 8, 14, 8, 2, "rgba(82, 98, 104, 0.62)");
+  for (let i = 0; i < 42; i += 1) {
+    const sx = x + ((i * 47) % w);
+    const sy = y + 12 + ((i * 31) % Math.floor(h * 0.42));
+    const twinkle = 0.45 + Math.sin(time * 1.7 + i) * 0.25;
+    ctx.fillStyle = `rgba(236, 244, 255, ${twinkle})`;
+    ctx.fillRect(sx, sy, i % 3 === 0 ? 2 : 1, i % 4 === 0 ? 2 : 1);
   }
 
-  const cloudOffset = (time * 13) % (w + 120);
+  const cloudOffset = (time * 9) % (w + 160);
   for (let i = 0; i < 3; i += 1) {
-    const cx = x - 120 + cloudOffset + i * 190;
-    const cy = y + 26 + i * 15;
-    fillRoundedRect(cx, cy, 95, 28, 13, "rgba(228, 236, 235, 0.36)");
-    fillRoundedRect(cx + 18, cy - 8, 62, 20, 10, "rgba(229, 237, 235, 0.32)");
+    const cx = x - 150 + cloudOffset + i * 220;
+    const cy = y + h * 0.2 + i * 18;
+    fillRoundedRect(cx, cy, 130, 24, 12, "rgba(84, 99, 143, 0.28)");
+    fillRoundedRect(cx + 24, cy - 8, 82, 18, 9, "rgba(104, 119, 165, 0.22)");
   }
 
-  const roadY = y + h * 0.76;
-  const roadH = h * 0.2;
+  const buildingColors = ["#151a31", "#1c2340", "#202848", "#18203b", "#243052"];
+  for (let i = 0; i < 13; i += 1) {
+    const bw = w * (0.055 + (i % 3) * 0.012);
+    const bh = h * (0.22 + (i % 5) * 0.045);
+    const bx = x + i * (w / 12.2) - 10;
+    const by = y + h * 0.68 - bh;
+    fillRoundedRect(bx, by, bw, bh, 2, buildingColors[i % buildingColors.length]);
+    for (let row = 0; row < 5; row += 1) {
+      for (let col = 0; col < 3; col += 1) {
+        if ((row + col + i) % 3 === 0) {
+          const wx = bx + 8 + col * (bw * 0.25);
+          const wy = by + 10 + row * (bh * 0.15);
+          ctx.fillStyle = row % 2 ? "rgba(255, 198, 82, 0.72)" : "rgba(98, 210, 232, 0.58)";
+          ctx.fillRect(wx, wy, Math.max(3, bw * 0.09), 4);
+        }
+      }
+    }
+  }
+
+  const roadY = y + h * 0.74;
+  const roadH = h * 0.22;
   const roadGrad = ctx.createLinearGradient(x, roadY, x, roadY + roadH);
-  roadGrad.addColorStop(0, "rgba(66, 72, 75, 0.78)");
-  roadGrad.addColorStop(1, "rgba(47, 52, 56, 0.82)");
+  roadGrad.addColorStop(0, "rgba(24, 29, 45, 0.94)");
+  roadGrad.addColorStop(1, "rgba(9, 12, 22, 0.94)");
   fillRoundedRect(x, roadY, w, roadH, 3, roadGrad);
 
-  ctx.strokeStyle = "rgba(35, 40, 44, 0.45)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(x, roadY + roadH * 0.52);
-  ctx.lineTo(x + w, roadY + roadH * 0.43);
-  ctx.stroke();
-
-  for (let i = 0; i < 9; i += 1) {
-    const stripeX = x + ((time * 60 + i * 62) % (w + 40)) - 20;
-    fillRoundedRect(stripeX, roadY + roadH * 0.5, 24, 3, 1, "rgba(226, 224, 198, 0.45)");
+  for (let i = 0; i < 10; i += 1) {
+    const stripeX = x + ((time * 46 + i * 70) % (w + 60)) - 30;
+    fillRoundedRect(stripeX, roadY + roadH * 0.52, 28, 3, 1, "rgba(245, 211, 118, 0.46)");
   }
   drawCarsOutside(time, x, roadY, w, roadH);
 
-  for (let i = 0; i < 10; i += 1) {
-    const tx = x + 22 + i * ((w - 44) / 9);
-    const sway = Math.sin(time * (0.9 + i * 0.08) + i * 0.7) * 6;
-    ctx.strokeStyle = "#2f3e31";
-    ctx.lineWidth = 2.8;
+  for (let i = 0; i < 36; i += 1) {
+    const rx = x + ((i * 23 + time * 18) % w);
+    const ry = y + ((i * 41 + time * 42) % h);
+    ctx.strokeStyle = "rgba(174, 207, 241, 0.28)";
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(tx, y + h);
-    ctx.quadraticCurveTo(tx + sway, y + h * 0.63, tx + sway * 1.2, y + h * 0.34);
+    ctx.moveTo(rx, ry);
+    ctx.lineTo(rx - 6, ry + 18);
     ctx.stroke();
-
-    fillRoundedRect(tx - 16 + sway, y + h * 0.18, 35, 24, 10, "#597f57");
-    fillRoundedRect(tx - 11 + sway * 0.7, y + h * 0.24, 29, 18, 9, "#6d9563");
-  }
-
-  for (let i = 0; i < state.leaves.length; i += 1) {
-    const leaf = state.leaves[i];
-    const lx = x + (leaf.x * w + Math.sin(time * leaf.speed + leaf.phase) * 7 + time * 11) % w;
-    const ly = y + h * 0.18 + leaf.y * (h * 0.72) + Math.cos(time * leaf.speed + leaf.phase) * 4;
-    ctx.fillStyle = "rgba(175, 205, 130, 0.56)";
-    ctx.fillRect(lx, ly, leaf.size, leaf.size);
   }
 }
 
 function drawWindowFrame() {
   const { windowX: x, windowY: y, windowW: w, windowH: h } = state.layout;
 
-  ctx.fillStyle = "#4d2f1f";
+  const curtainGrad = ctx.createLinearGradient(x, y, x, y + h);
+  curtainGrad.addColorStop(0, "#a93f63");
+  curtainGrad.addColorStop(0.55, "#722b55");
+  curtainGrad.addColorStop(1, "#3a2140");
+  fillRoundedRect(x - 64, y - 20, 62, h + 60, 18, curtainGrad);
+  fillRoundedRect(x + w + 2, y - 20, 62, h + 60, 18, curtainGrad);
+  for (let i = 0; i < 4; i += 1) {
+    const foldX = x - 52 + i * 13;
+    ctx.strokeStyle = "rgba(255, 160, 150, 0.16)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(foldX, y - 6);
+    ctx.quadraticCurveTo(foldX + 8, y + h * 0.45, foldX, y + h + 32);
+    ctx.stroke();
+
+    const rightFoldX = x + w + 14 + i * 13;
+    ctx.beginPath();
+    ctx.moveTo(rightFoldX, y - 6);
+    ctx.quadraticCurveTo(rightFoldX - 8, y + h * 0.45, rightFoldX, y + h + 32);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "#171125";
   ctx.fillRect(x - 16, y - 16, w + 32, h + 32);
-  ctx.fillStyle = "#6f4730";
+  ctx.fillStyle = "#312141";
   ctx.fillRect(x - 8, y - 8, w + 16, h + 16);
 
-  ctx.fillStyle = "#6a432d";
+  ctx.fillStyle = "#1a142b";
   ctx.fillRect(x + w * 0.5 - 3, y, 6, h);
   ctx.fillRect(x, y + h * 0.52, w, 5);
 
-  ctx.fillStyle = "#4f3123";
+  ctx.fillStyle = "#151024";
   ctx.fillRect(x - 30, y + h + 9, w + 60, 14);
+  fillRoundedRect(x - 44, y - 26, w + 88, 12, 6, "#241a34");
 
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.09)";
+  ctx.strokeStyle = "rgba(174, 220, 255, 0.13)";
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(x + 12, y + 12);
@@ -363,29 +464,34 @@ function drawWindowFrame() {
   ctx.stroke();
 
   ctx.save();
-  ctx.shadowColor = "rgba(0,0,0,0.3)";
+  ctx.shadowColor = "rgba(93, 190, 255, 0.28)";
   ctx.shadowBlur = 20;
-  ctx.strokeStyle = "rgba(255, 220, 190, 0.18)";
+  ctx.strokeStyle = "rgba(141, 216, 255, 0.28)";
   ctx.lineWidth = 1;
   ctx.strokeRect(x - 8, y - 8, w + 16, h + 16);
   ctx.restore();
 }
 
 function drawSunbeams(time) {
-  const { windowX: x, windowY: y, windowW: w, windowH: h, wallY } = state.layout;
+  const { deskX, deskY, deskW, wallY } = state.layout;
+  const lampX = deskX + deskW * 0.17;
+  const lampY = deskY - 54;
   ctx.save();
-  ctx.globalAlpha = 0.16;
-  ctx.fillStyle = "#efcb8e";
+  const glow = ctx.createRadialGradient(lampX, lampY, 8, lampX, lampY, state.width * 0.34);
+  glow.addColorStop(0, "rgba(255, 205, 104, 0.34)");
+  glow.addColorStop(0.38, "rgba(255, 142, 72, 0.16)");
+  glow.addColorStop(1, "rgba(255, 142, 72, 0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, state.width, state.height);
 
-  for (let i = 0; i < 5; i += 1) {
-    const wobble = Math.sin(time * 0.6 + i * 0.65) * 13;
-    ctx.beginPath();
-    ctx.moveTo(x + w * (0.17 + i * 0.1) + wobble, y + h - 2);
-    ctx.lineTo(x + w * (0.31 + i * 0.15) + wobble * 1.2, wallY + 84);
-    ctx.lineTo(x + w * (0.42 + i * 0.15) + wobble * 0.8, wallY + 86);
-    ctx.closePath();
-    ctx.fill();
-  }
+  ctx.globalAlpha = 0.24 + Math.sin(time * 1.4) * 0.035;
+  ctx.fillStyle = "#ffd77a";
+  ctx.beginPath();
+  ctx.moveTo(lampX - 42, lampY + 12);
+  ctx.lineTo(lampX + 114, wallY + 64);
+  ctx.lineTo(lampX - 8, wallY + 76);
+  ctx.closePath();
+  ctx.fill();
   ctx.restore();
 }
 
@@ -528,8 +634,9 @@ function drawDesk(time) {
   ctx.fill();
 
   const topGrad = ctx.createLinearGradient(x, y, x, y + h);
-  topGrad.addColorStop(0, "#66452f");
-  topGrad.addColorStop(1, "#3f281d");
+  topGrad.addColorStop(0, "#6a4a47");
+  topGrad.addColorStop(0.5, "#3d2c3f");
+  topGrad.addColorStop(1, "#201829");
   ctx.fillStyle = topGrad;
   ctx.beginPath();
   ctx.moveTo(x, y);
@@ -539,15 +646,32 @@ function drawDesk(time) {
   ctx.closePath();
   ctx.fill();
 
-  ctx.fillStyle = "#2e1f17";
+  ctx.fillStyle = "#171222";
   ctx.fillRect(x + 18, y + 34, 22, h + 26);
   ctx.fillRect(x + w - 40, y + 34, 22, h + 26);
   ctx.fillRect(x, y + 30, w, 7);
 
+  const lampX = x + w * 0.17;
+  const lampY = y - 54;
+  ctx.save();
+  ctx.shadowColor = "rgba(255, 202, 90, 0.75)";
+  ctx.shadowBlur = 22;
+  fillRoundedRect(lampX - 25, lampY - 2, 54, 24, 8, "#f2b84a");
+  ctx.restore();
+  fillRoundedRect(lampX - 31, lampY + 14, 66, 10, 5, "#c96f42");
+  ctx.strokeStyle = "#d89856";
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(lampX, lampY + 24);
+  ctx.lineTo(lampX - 26, y + 20);
+  ctx.stroke();
+  fillRoundedRect(lampX - 42, y + 18, 42, 8, 4, "#e0a05a");
+  fillRoundedRect(lampX - 55, y + 24, 70, 10, 5, "#2a2031");
+
   const mugX = x + 80;
   const mugY = y + 6;
-  fillRoundedRect(mugX, mugY, 28, 24, 5, "#d7aa79");
-  fillRoundedRect(mugX + 24, mugY + 7, 8, 11, 3, "#d7aa79");
+  fillRoundedRect(mugX, mugY, 28, 24, 5, "#f1c37a");
+  fillRoundedRect(mugX + 24, mugY + 7, 8, 11, 3, "#f1c37a");
   fillRoundedRect(mugX + 5, mugY + 4, 18, 3, 2, "#f2d6bc");
 
   for (let i = 0; i < 4; i += 1) {
@@ -557,16 +681,16 @@ function drawDesk(time) {
   }
 
   const secondCupX = x + 156;
-  fillRoundedRect(secondCupX, y + 10, 24, 18, 4, "#c89260");
-  fillRoundedRect(secondCupX + 20, y + 15, 6, 8, 3, "#c89260");
+  fillRoundedRect(secondCupX, y + 10, 24, 18, 4, "#e66f5d");
+  fillRoundedRect(secondCupX + 20, y + 15, 6, 8, 3, "#e66f5d");
 
-  fillRoundedRect(x + w * 0.28, y + 8, 64, 18, 4, "#4a5c77");
+  fillRoundedRect(x + w * 0.28, y + 8, 64, 18, 4, "#4f9fbd");
   fillRoundedRect(x + w * 0.28 + 4, y + 12, 56, 4, 2, "rgba(233, 241, 255, 0.35)");
 
-  fillRoundedRect(x + w * 0.74, y + 10, 20, 26, 4, "#7c533c");
-  fillRoundedRect(x + w * 0.74 - 1, y + 8, 22, 5, 3, "#946a50");
-  fillRoundedRect(x + w * 0.74 + 3, y - 10, 6, 18, 3, "#4f8a54");
-  fillRoundedRect(x + w * 0.74 + 10, y - 8, 6, 16, 3, "#629f66");
+  fillRoundedRect(x + w * 0.74, y + 10, 20, 26, 4, "#d66f55");
+  fillRoundedRect(x + w * 0.74 - 1, y + 8, 22, 5, 3, "#ffb176");
+  fillRoundedRect(x + w * 0.74 + 3, y - 10, 6, 18, 3, "#59d083");
+  fillRoundedRect(x + w * 0.74 + 10, y - 8, 6, 16, 3, "#7ee39a");
 }
 
 function drawMonitor(time) {
@@ -589,45 +713,62 @@ function drawMonitor(time) {
   fillRoundedRect(x, y, w, h, 8, screenGrad);
   ctx.clip();
 
-  fillRoundedRect(x, y, w, 20, 0, "#212c37");
-  fillRoundedRect(x + 8, y + 6, 52, 8, 3, "#304153");
-  fillRoundedRect(x + 66, y + 6, 36, 8, 3, "#40556b");
+  const dvdBg = ctx.createLinearGradient(x, y, x + w, y + h);
+  dvdBg.addColorStop(0, "#05030d");
+  dvdBg.addColorStop(0.5, "#080f22");
+  dvdBg.addColorStop(1, "#130620");
+  ctx.fillStyle = dvdBg;
+  ctx.fillRect(x, y, w, h);
 
-  fillRoundedRect(x + 6, y + 24, 24, h - 30, 2, "#1b2430");
   for (let i = 0; i < 9; i += 1) {
-    ctx.fillStyle = "rgba(160, 175, 190, 0.45)";
-    ctx.fillRect(x + 11, y + 31 + i * 11, 8, 2);
+    ctx.fillStyle = i % 2 ? "rgba(69, 218, 255, 0.035)" : "rgba(255, 91, 140, 0.028)";
+    ctx.fillRect(x, y + i * 17, w, 8);
   }
 
-  for (let i = 0; i < state.codeSeeds.length; i += 1) {
-    const seed = state.codeSeeds[i];
-    const rowY = y + 30 + i * 12;
-    const baseW = (w - 54) * seed;
-    const morph = Math.sin(time * 5 + i * 1.1) * 18;
-    const lineW = clamp(baseW + morph, 36, w - 76);
-    const startX = x + 36;
+  const logoW = 84;
+  const logoH = 46;
+  const pad = 17;
+  const travelX = w - logoW - pad * 2;
+  const travelY = h - logoH - pad * 2;
+  const bounceX = Math.abs(((time * 24) % (travelX * 2)) - travelX);
+  const bounceY = Math.abs(((time * 17) % (travelY * 2)) - travelY);
+  const logoX = x + pad + bounceX;
+  const logoY = y + pad + bounceY;
+  const logoColors = ["#58e6ff", "#ffcf5d", "#ff6f82", "#78f29b", "#b28cff"];
+  const logoColor = logoColors[Math.floor(time * 0.55) % logoColors.length];
 
-    ctx.fillStyle = i % 2 ? "rgba(120, 246, 166, 0.88)" : "rgba(108, 224, 255, 0.84)";
-    ctx.fillRect(startX, rowY, lineW * 0.58, 3);
-    ctx.fillStyle = "rgba(245, 206, 120, 0.86)";
-    ctx.fillRect(startX + lineW * 0.6, rowY, lineW * 0.2, 3);
-    ctx.fillStyle = "rgba(190, 146, 255, 0.84)";
-    ctx.fillRect(startX + lineW * 0.82, rowY, lineW * 0.12, 3);
+  ctx.save();
+  ctx.shadowColor = logoColor;
+  ctx.shadowBlur = 20;
+  fillRoundedRect(logoX - 8, logoY - 6, logoW + 16, logoH + 12, 8, "rgba(255, 255, 255, 0.038)");
+  ctx.fillStyle = logoColor;
+  ctx.font = "italic 900 32px Source Sans 3, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("DVD", logoX + logoW * 0.5, logoY + 16);
 
-    const erodeBits = 3 + Math.floor((Math.sin(time * 8 + i * 0.8) + 1) * 3);
-    for (let p = 0; p < erodeBits; p += 1) {
-      const px = startX + lineW + p * 4 + ((time * 25 + i * 17 + p) % 6);
-      const py = rowY + (p % 2 ? 1 : -1);
-      ctx.fillStyle = p % 2 ? "rgba(96, 238, 146, 0.82)" : "rgba(58, 193, 113, 0.82)";
-      ctx.fillRect(px, py, 2, 2);
-    }
-  }
+  ctx.strokeStyle = logoColor;
+  ctx.lineWidth = 2.4;
+  ctx.beginPath();
+  ctx.ellipse(logoX + logoW * 0.5, logoY + 29, logoW * 0.38, 6.5, -0.08, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.fillStyle = logoColor;
+  ctx.beginPath();
+  ctx.moveTo(logoX + logoW * 0.78, logoY + 27);
+  ctx.lineTo(logoX + logoW * 0.95, logoY + 24);
+  ctx.lineTo(logoX + logoW * 0.83, logoY + 32);
+  ctx.closePath();
+  ctx.fill();
 
-  const cursorBlink = Math.sin(time * 6) > 0 ? 1 : 0;
-  if (cursorBlink) {
-    ctx.fillStyle = "rgba(145, 255, 191, 0.9)";
-    ctx.fillRect(x + w - 32, y + h - 18, 2, 9);
-  }
+  ctx.font = "900 9px Source Sans 3, sans-serif";
+  ctx.letterSpacing = "1px";
+  ctx.fillText("VIDEO", logoX + logoW * 0.5, logoY + 42);
+  ctx.letterSpacing = "0px";
+  ctx.restore();
+
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x + 8, y + 8, w - 16, h - 16);
 
   const sweepX = x + ((time * 115) % (w + 90)) - 60;
   const scan = ctx.createLinearGradient(sweepX, y, sweepX + 52, y);
@@ -658,11 +799,18 @@ function drawMonitor(time) {
 
   const keyboardX = deskX + deskW * 0.44;
   const keyboardY = deskY + 10;
+  const underglow = ctx.createLinearGradient(keyboardX, keyboardY, keyboardX + 142, keyboardY);
+  underglow.addColorStop(0, "rgba(255, 93, 120, 0.36)");
+  underglow.addColorStop(0.5, "rgba(83, 231, 255, 0.3)");
+  underglow.addColorStop(1, "rgba(134, 255, 162, 0.28)");
+  fillRoundedRect(keyboardX - 12, keyboardY + 15, 166, 18, 9, underglow);
   fillRoundedRect(keyboardX, keyboardY, 142, 22, 6, "#262d33");
   for (let i = 0; i < 15; i += 1) {
     const keyX = keyboardX + 7 + i * 8.6;
-    ctx.fillStyle = i % 2 ? "#3a464e" : "#2f3941";
+    const hue = (time * 90 + i * 22) % 360;
+    ctx.fillStyle = `hsl(${hue}, 84%, 66%)`;
     ctx.fillRect(keyX, keyboardY + 6, 6, 3);
+    ctx.fillStyle = i % 2 ? "#3a464e" : "#2f3941";
     ctx.fillRect(keyX, keyboardY + 13, 6, 3);
   }
 }
@@ -710,6 +858,13 @@ function drawAtmosphere(time) {
   vignette.addColorStop(0, "rgba(0, 0, 0, 0)");
   vignette.addColorStop(1, "rgba(0, 0, 0, 0.34)");
   ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, width, height);
+
+  const colorWash = ctx.createLinearGradient(0, 0, width, height);
+  colorWash.addColorStop(0, "rgba(255, 165, 112, 0.08)");
+  colorWash.addColorStop(0.45, "rgba(0, 0, 0, 0)");
+  colorWash.addColorStop(1, "rgba(102, 147, 210, 0.07)");
+  ctx.fillStyle = colorWash;
   ctx.fillRect(0, 0, width, height);
 }
 
